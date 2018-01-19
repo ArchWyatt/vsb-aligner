@@ -1,0 +1,14 @@
+*~
+*.sln
+*.db
+*.opendb
+.vs/*
+*.tlog
+*.idb
+*.pdb
+*.vcxproj
+*.filters
+Debug/*
+Release/*
+vsb-aligner/Debug/*
+vsb-aligner/Release/*
