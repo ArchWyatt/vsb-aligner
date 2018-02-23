@@ -1,10 +1,12 @@
 #include "Genome.h"
 
-Genome::Genome(char* path_to_genome) 
+Genome::Genome(char* path_to_genome)
 {
 	genome_path = path_to_genome;
 	
 	index_path = Utils::StrAppend(genome_path, GENOME_INDEX_SUFFIX);
+
+	chromosome_list = new List<GenomeRegion>();
 	
 	InitializeGenomeList();
 }
@@ -44,8 +46,11 @@ void Genome::FetchChromosome(GenomeRegion* region)
 		exit(EXIT_FAILURE);
 	}
 
-	//prepare the size of the chrom buffer => we left [0] empty because positional sysytem on chromosomes starts at number 1
+	//prepare the size of the chrom buffer
+	//further bases will c-string zero terminated
 	region->bases = new char[region->bases_number + 1];
+	//make the zero-th element be max byte value	
+	region->bases[region->bases_number] = 0;
 
 	//set the file ptr to the location given by genome region object
 	genome.seekg(region->bases_start);
@@ -62,7 +67,7 @@ void Genome::FetchChromosome(GenomeRegion* region)
 		genome.read(line, region->bytes_per_line);		
 		Utils::StrUppercase(line, region->bytes_per_line);
 		//place line into region buffer		
-		memcpy(region->bases + line_ptr*region->bases_per_line + 1, line, region->bases_per_line * sizeof(char));
+		memcpy(region->bases + line_ptr*region->bases_per_line, line, region->bases_per_line * sizeof(char));
 		//skip the end of line		
 		line_ptr++;
 	}
@@ -71,10 +76,16 @@ void Genome::FetchChromosome(GenomeRegion* region)
 		//read the rest of bases		
 		genome.read(line, rest);		
 		Utils::StrUppercase(line, region->bytes_per_line);		
-		memcpy(region->bases + line_ptr*region->bases_per_line + 1, line, rest * sizeof(char));
+		memcpy(region->bases + line_ptr*region->bases_per_line, line, rest * sizeof(char));
 	}
 
 	genome.close();
+}
+
+void Genome::ReleaseChromosome(GenomeRegion* region)
+{
+	delete[] region->bases;
+	region->bases = NULL;
 }
 
 void Genome::PrefetchChromosome(char* chromosome)
@@ -239,6 +250,29 @@ char* Genome::BaseIntervalDisc(char* chromosome, u_int pos_start, u_int pos_end)
 List<GenomeRegion>* Genome::Chromosomes()
 {
 	return chromosome_list;
+}
+
+void Genome::PrepareIndexes()
+{
+	char* sa_index_name = Utils::StrAppend(this->genome_path, ".sa");
+	char* bwt_index_name = Utils::StrAppend(this->genome_path, ".bwt");
+
+	ListIterator<GenomeRegion> iterator(chromosome_list->First());
+
+	while (iterator.Current() != NULL) {
+		GenomeRegion* region = iterator.Current()->Value();
+		cout << region->chromosome_id << endl;
+
+		FetchChromosome(region);
+
+		SuffixArray sa(region->bases, region->bases_number + 1);
+		sa.Verify();
+		sa.Serialize(sa_index_name);
+		//sa.SerializeBWT(bwt_index_name);
+
+		ReleaseChromosome(region);
+		iterator.Next();
+	}
 }
 
 char Genome::ReverseComplement(char base)

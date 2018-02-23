@@ -75,6 +75,13 @@ public:
 
 	~ListIterator() {};
 
+	T Value() {
+		if (current != NULL)
+			return current->Value();
+
+		return NULL;
+	}
+
 	ListItem<T>* Current() {
 		return current;
 	};

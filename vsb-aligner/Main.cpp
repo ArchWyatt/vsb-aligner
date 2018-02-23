@@ -3,7 +3,6 @@
 
 #include "Definitions.h"
 #include "Genome.h"
-#include "SuffixArray.h"
 
 using namespace std;
 
@@ -73,26 +72,25 @@ int main(int argc, char* argv[])
 	ProgInfo prog_info;
 
 	/* parse arguments */
-	//ParseArguments(argc, argv, &prog_info);
+	ParseArguments(argc, argv, &prog_info);
 
 	/* verify arguments */
-	//Verify(&prog_info);
+	Verify(&prog_info);
 
 	/* verify existence of genome and fai  file */
-	//if (!Genome::GenomeExists(prog_info.genome_path)) {
-	//	cerr << "Genome path: " << prog_info.genome_path << " doesn't exist." << endl;
-	//	exit(EXIT_FAILURE);
-	//}
-	//if (!Genome::GenomeIndexExists(prog_info.genome_path)) {
-	//	cerr << "Index for genome: " << prog_info.genome_path << " doesn't exist in the same folder." << endl;
-	//	exit(EXIT_FAILURE);
-	//}
+	if (!Genome::GenomeExists(prog_info.genome_path)) {
+		cerr << "Genome path: " << prog_info.genome_path << " doesn't exist." << endl;
+		exit(EXIT_FAILURE);
+	}
+	if (!Genome::GenomeIndexExists(prog_info.genome_path)) {
+		cerr << "Index for genome: " << prog_info.genome_path << " doesn't exist in the same folder." << endl;
+		exit(EXIT_FAILURE);
+	}
 
-	//Genome genome(prog_info.genome_path);
+	Genome genome(prog_info.genome_path);
+
+	genome.PrepareIndexes();
 	
-	char* test = "TTTT";
-	SuffixArray sa(test, strlen(test)+1);	
-	sa.Verify();
 
 	return EXIT_SUCCESS;
 }

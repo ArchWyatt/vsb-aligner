@@ -24,15 +24,17 @@
 #include "GenomeRegion.h"
 #include "Hash.h"
 #include "List.h"
+#include "SuffixArray.h"
 #include "Utils.h"
 
 using namespace std;
-
 
 class Genome
 {
 private:
 	const char* GENOME_INDEX_SUFFIX = ".fai";
+	const char* BWT_INDEX_SUFFIX = ".bwt";
+	const char* SA_INDEX_SUFFIX = ".sa";
 
 	char* genome_path;
 	char* index_path;
@@ -43,11 +45,6 @@ private:
 	List<GenomeRegion>* chromosome_list;
 	Hash<GenomeRegion>* active_chromosomes_hash;
 
-	/* 
-		Loads bases for particular chromosome into memory.
-	*/
-	void FetchChromosome(GenomeRegion* region);
-
 public:
 	Genome(char* path_to_genome);
 	~Genome();
@@ -56,6 +53,16 @@ public:
 		Initialize Genome List
 	*/
 	void InitializeGenomeList();
+
+	/*
+	Loads bases for particular chromosome into memory.
+	*/
+	void FetchChromosome(GenomeRegion* region);
+
+	/*
+		Releases bases of the genome region from memory.
+	*/
+	void ReleaseChromosome(GenomeRegion* region);
 
 	/* 
 		Prefetches chromosomes bases into memory.
@@ -86,6 +93,12 @@ public:
 		Returns the list of chromosomes.
 	*/
 	List<GenomeRegion>* Chromosomes();
+
+	/*
+		Prepare BWT-SA index.
+	*/
+	void PrepareIndexes();
+
 
 	/*
 		Returns reverse complement of the sequence. Operates on itself

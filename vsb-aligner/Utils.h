@@ -62,7 +62,8 @@ public:
 
 	static GenomeRegion* LineToRegion(char* line)
 	{
-		if (strlen(line) == 0)
+		u_int line_len = strlen(line);
+		if (line_len == 0)
 			return NULL;
 
 		char* args[GENOME_REGION_ARGUMENTS];
@@ -71,7 +72,7 @@ public:
 		while (line[i] != 0 && c < GENOME_REGION_ARGUMENTS) {
 			//scan for word delimited by tab			
 			u_int l = i;
-			while (line[l] != '\t') l++;
+			while (!(line[l] == '\t' || line_len == l)) l++;
 			//l => length of the word
 			char* word = new char[l - i + 1];
 			for (u_int j = 0; j < l - i; j++) {
