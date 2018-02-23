@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstring>
 
+#include "Aligner.h"
 #include "Definitions.h"
 #include "Genome.h"
 #include "Read.h"
@@ -93,8 +94,17 @@ int main(int argc, char* argv[])
 	//zkotnrolovat existenci indexu
 	genome.PrepareIndexes();
 
+	Aligner aligner(&prog_info);
+	
+	//will do the pairing of reads
+	aligner.PairReads();
+
+	//will assign each read (0,1 or multiple) alignments
+	aligner.AlignReads();
+
 	//nacist do pameti ready
-	List<Read*>* reads = new List<Read*>();
+	List<Read*>* reads = 
+
 	//vytvorit pro kazdy read pole alignmentu na prislusnych chromozomech
 
 	/*

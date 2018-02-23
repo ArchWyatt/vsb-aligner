@@ -32,6 +32,15 @@ private:
 	char* baseMap;
 	
 	/*
+		BWT and first col representations.
+	*/	
+	char* m_bwt;
+	u_int* m_offsets;
+	u_int* m_rank;
+
+	void PrepareBWT();
+
+	/*
 		Sort suffix array: method recursive radix
 	*/
 	void RadixSortRecursive(u_int start, u_int end, u_int level);
@@ -55,8 +64,25 @@ private:
 	*/
 	bool GT(int a, int b);
 
+	/*
+		Backtrack search in sa.
+		- modifies start and end values denoting output interval
+	*/
+	void Backtrack(char* sequence, u_int seq_id, u_int& start, u_int& end);
+
 public:
+	/*
+		Default constructor.
+	*/
+	SuffixArray();
+
+	/* to prepare index */
 	SuffixArray(char* sequence, u_int sequence_length);
+
+	/* to load index from file */
+	SuffixArray(char* index_path, char* bases, u_int pos_start, u_int length);
+
+	/* destruct */
 	~SuffixArray();
 
 	/*
@@ -72,4 +98,6 @@ public:
 	void Show();
 
 	bool Verify();
+
+	u_int* Localize(char* src, u_int src_len, u_int& occurences);
 };

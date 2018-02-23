@@ -1,6 +1,13 @@
 #include "SuffixArray.h"
 
-SuffixArray::SuffixArray(char* sequence, u_int sequence_length)
+SuffixArray::SuffixArray()
+{
+	m_rank = NULL;
+	m_offsets = NULL;
+	m_bwt = NULL
+}
+
+SuffixArray::SuffixArray(char* sequence, u_int sequence_length) : SuffixArray()
 {
 	m_sequence = sequence;
 	m_sequence_length = sequence_length;
@@ -17,14 +24,61 @@ SuffixArray::SuffixArray(char* sequence, u_int sequence_length)
 	baseMap['N'] = 4;
 	baseMap['T'] = 5;
 
-	//RadixSortRecursive(0, m_sequence_length - 1, 0);
-
 	SortArray(0, m_sequence_length - 1);
+}
+
+SuffixArray::SuffixArray(char* index_path, char* bases, u_int pos_start, u_int length) : SuffixArray()
+{
+	m_sequence = bases;
+	m_sequence_length = length + 1;
+	s_array = new u_int[m_sequence_length];
+	
+	//load suffix array from file
+	ifstream input(index_path, ios::binary);
+	input.seekg(pos_start);
+	input.read((char*)s_array, sizeof(u_int)*(length + 1));
+	input.close();
+
+	PrepareBWT();
 }
 
 SuffixArray::~SuffixArray()
 {
 	delete[] s_array;
+
+	delete[] m_bwt;
+	delete[] m_offsets;
+	delete[] m_rank;	
+}
+
+void SuffixArray::PrepareBWT()
+{
+	m_bwt = new char[m_sequence_length];
+	m_rank = new u_int[m_sequence_length];
+
+	for (u_int i = 0; i < m_sequence_length; i++) {
+		if (s_array[i] == 0)
+			m_bwt[i] = 0;
+		else
+			m_bwt[i] = m_sequence[s_array[i] - 1];
+	}
+
+	u_int f[256];
+	for (u_int i = 0; i < 256; i++){
+		m_offsets[i] = 0;
+		f[i] = 0;
+	}
+	
+	for (u_int i = 0; i < m_sequence_length; i++){
+		m_rank[i] = f[m_sequence[i]];
+		f[m_sequence[i]]++;
+	}
+		
+	m_offsets[0] = 0;
+	for (u_int i = 1; i < 256; i++)
+		m_offsets[i] = m_offsets[i - 1] + f[i];
+	
+
 }
 
 void SuffixArray::RadixSortRecursive(u_int start, u_int end, u_int level)
@@ -291,4 +345,53 @@ void SuffixArray::SerializeBWT(char* bwt_path)
 	output_bwt.close();
 
 	delete[] bwt_buf;
+}
+
+void SuffixArray::Backtrack(char* sequence, u_int seq_id, u_int& start, u_int& end)
+{
+	//localize smallest next sym in l column	
+	u_int new_start = 1;
+	u_int new_end = 0;
+	for (u_int i = start; i <= end; i++) {
+		if (sequence[seq_id] == m_bwt[i]) {
+			new_start = m_offsets[sequence[seq_id]] + m_rank[i];
+		}
+	}
+
+	for (u_int i = end; i >= start; i--) {
+		if (sequence[seq_id] == m_bwt[i]) {
+			new_end = m_offsets[sequence[seq_id]] + m_rank[i];
+		}
+	}
+
+	start = new_start;
+	end = new_end;
+
+	if (seq_id == 0 || start > end)
+		return;
+	else
+		Backtrack(sequence, --seq_id, start, end);
+}
+
+u_int* SuffixArray::Localize(char* src, u_int src_len, u_int& occurences)
+{
+	u_int start = m_offsets[src[src_len-1]];
+	u_int end = m_offsets[src[src_len - 1] + 1] - 1;
+
+	Backtrack(src, src_len - 2, start, end);
+
+	if (start > end) {
+		//none found
+		occurences = 0;
+		return NULL;
+	}
+	else {
+		occurences = end - start + 1;
+		u_int* positions = new u_int[occurences];
+		for (u_int i = 0; i < occurences; i++) {
+			positions[i] = s_array[start + i];
+		}
+
+		return positions;
+	}
 }
