@@ -3,6 +3,7 @@
 
 #include "Definitions.h"
 #include "Genome.h"
+#include "Read.h"
 
 using namespace std;
 
@@ -89,7 +90,16 @@ int main(int argc, char* argv[])
 
 	Genome genome(prog_info.genome_path);
 
+	//zkotnrolovat existenci indexu
 	genome.PrepareIndexes();
+
+	//nacist do pameti ready
+	List<Read*>* reads = new List<Read*>();
+	//vytvorit pro kazdy read pole alignmentu na prislusnych chromozomech
+
+	/*
+		Sekce: Martin Kubala
+	*/
 	
 
 	return EXIT_SUCCESS;

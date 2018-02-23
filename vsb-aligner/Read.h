@@ -4,7 +4,9 @@
 	Class representing one read
 */
 
+#include "Alignment.h"
 #include "Definitions.h"
+#include "List.h"
 
 static const u_char FORWARD_READ = 0;
 static const u_char REVERSE_READ = 1;
@@ -24,7 +26,7 @@ public:
 		read_type = type;
 		read_idx1 = 0;
 		read_idx2 = 0;
-		paired_read = NULL;
+		paired_read = NULL;	
 	};
 
 	~Read() {
@@ -45,6 +47,15 @@ public:
 	u_int read_idx1;
 	u_int read_idx2;
 		
+	/*
+		Pole alignmentu.
+	*/
+	List<Alignment*>* alignments;
+	/*
+		Delka pole alignmentu.
+	*/
+	u_char aligment_len;
+
 	/*
 		The expected length of the sequence based on the cigar and read beg
 	*/
