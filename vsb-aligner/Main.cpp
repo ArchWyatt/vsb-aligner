@@ -93,6 +93,7 @@ int main(int argc, char* argv[])
 
 	//zkotnrolovat existenci sa-indexu
 	if (!Genome::SAIndexExists(prog_info.genome_path)) {
+		cout << "Suffix array not found." << endl << "Beginning suffix array build... :" << endl;
 		genome.PrepareIndexes();
 	}
 
