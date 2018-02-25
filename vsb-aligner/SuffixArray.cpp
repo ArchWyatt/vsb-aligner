@@ -38,20 +38,14 @@ SuffixArray::SuffixArray(char* index_path, char* bases, long long pos_start, u_i
 	input.seekg(pos_start*sizeof(u_int));
 	input.read((char*)s_array, sizeof(u_int)*length);
 	input.close();
-
-	cout << s_array[0] << endl;
-	cout << pos_start << endl;
-
-	//Show();
-	//Verify();
-
-	//PrepareBWT();
+	
+	PrepareBWT();
 }
 
 SuffixArray::~SuffixArray()
 {
 	delete[] s_array;
-	//delete[] m_sequence;
+	delete[] m_sequence;
 	delete[] m_bwt;
 	delete[] m_offsets;
 	delete[] m_rank;	
@@ -86,6 +80,7 @@ void SuffixArray::PrepareBWT()
 		m_offsets[i] = m_offsets[i - 1] + f[i-1];
 	
 	delete[] m_sequence;
+	m_sequence = NULL;
 }
 
 void SuffixArray::RadixSortRecursive(u_int start, u_int end, u_int level)
@@ -376,7 +371,7 @@ void SuffixArray::Backtrack(char* sequence, u_int seq_id, u_int& start, u_int& e
 
 	start = new_start;
 	end = new_end;
-	
+
 	if (seq_id == 0 || start > end)
 		return;
 	else

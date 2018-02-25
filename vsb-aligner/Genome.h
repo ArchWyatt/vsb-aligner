@@ -125,5 +125,10 @@ public:
 		Verifies fasta.fai index existence.
 	*/
 	static bool GenomeIndexExists(char* genome_path);
+
+	/*
+		Verifies sa index exists.
+	*/
+	static bool SAIndexExists(char* genome_path);
 };
 #endif

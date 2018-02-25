@@ -284,14 +284,18 @@ void Genome::CheckSAIndexes()
 	long long start_pos = 0;
 	while (iterator.Current() != NULL) {
 		GenomeRegion* region = iterator.Current()->Value();
-		cout << region->chromosome_id << endl;
 
 		u_int* test = new u_int[1];
 
 		sa_file.seekg(start_pos);
 
 		sa_file.read((char*)test, 4);
-		cout << test[0] << " \t " << region->bases_number << endl;
+
+		if(test[0] != region->bases_number){
+			cout << region->chromosome_id << endl;
+			cout << "Err: " << test[0] << " \t " << region->bases_number << endl;
+		}
+
 		start_pos += 4 * (region->bases_number + 1);
 		delete[] test;
 
@@ -366,6 +370,22 @@ bool Genome::GenomeIndexExists(char* genome_path)
 {
 	// convert genome path to fasta fai path
 	const char* index_path = Utils::StrAppend(genome_path, ".fai");
+
+	ifstream input(index_path);
+	if (input.fail()) {
+		input.close();
+		return false;
+	}
+	else {
+		input.close();
+		return true;
+	}
+}
+
+bool Genome::SAIndexExists(char* genome_path)
+{
+	// convert genome path to sa path
+	const char* index_path = Utils::StrAppend(genome_path, ".sa");
 
 	ifstream input(index_path);
 	if (input.fail()) {

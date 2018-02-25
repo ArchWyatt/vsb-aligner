@@ -91,8 +91,10 @@ int main(int argc, char* argv[])
 
 	Genome genome(prog_info.genome_path);
 
-	//zkotnrolovat existenci indexu
-	//genome.PrepareIndexes();
+	//zkotnrolovat existenci sa-indexu
+	if (!Genome::SAIndexExists(prog_info.genome_path)) {
+		genome.PrepareIndexes();
+	}
 
 	//check indexes
 	genome.CheckSAIndexes();

@@ -9,8 +9,8 @@ Aligner::Aligner(ProgInfo* prog_info, Genome* genome) : m_prog_info(prog_info), 
 	forward_reads = new List<Read>();
 	reverse_reads = new List<Read>();
 
-	//InitializeReads(prog_info->fq_F, FORWARD_READ);
-	//InitializeReads(prog_info->fq_R, REVERSE_READ);
+	InitializeReads(prog_info->fq_F, FORWARD_READ);
+	InitializeReads(prog_info->fq_R, REVERSE_READ);
 }
 
 Aligner::~Aligner()
@@ -157,6 +157,16 @@ void Aligner::AlignReads()
 		GenomeRegion* chromosome = chromosome_iterator.Current()->Value();
 		
 		cout << "Aligning in:" << chromosome->chromosome_id << endl;
+	
+		/*
+		char* chrom1 = "chr1";
+		if (strcmp(chrom1, chromosome->chromosome_id) != 0)
+		{
+			chrom_start += chromosome->bases_number + 1;
+			chromosome_iterator.Next();
+			continue;
+		}
+		*/
 					
 		m_genome->FetchChromosome(chromosome);
 		
@@ -164,7 +174,7 @@ void Aligner::AlignReads()
 		SuffixArray sa(sa_path, chromosome->bases, chrom_start, chromosome->bases_number + 1);
 
 		ListIterator<Read> reads_iterator(forward_reads->First());
-		while (false && reads_iterator.Current() != NULL) {
+		while (reads_iterator.Current() != NULL) {
 			Read* r = reads_iterator.Current()->Value();
 			u_int occ = 0;
 			u_int* positions = sa.Localize(r->sequence, strlen(r->sequence), occ);
