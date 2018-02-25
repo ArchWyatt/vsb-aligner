@@ -36,4 +36,6 @@ public:
 	void AlignReads();
 
 	List<Read>* Reads();
+
+	static int Compare(const void* a, const void* b);
 };

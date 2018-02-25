@@ -99,6 +99,7 @@ public:
 	*/
 	void PrepareIndexes();
 
+	void CheckSAIndexes();
 
 	/*
 		Returns reverse complement of the sequence. Operates on itself

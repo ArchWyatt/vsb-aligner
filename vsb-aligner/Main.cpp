@@ -92,9 +92,12 @@ int main(int argc, char* argv[])
 	Genome genome(prog_info.genome_path);
 
 	//zkotnrolovat existenci indexu
-	genome.PrepareIndexes();
+	//genome.PrepareIndexes();
 
-	Aligner aligner(&prog_info);
+	//check indexes
+	genome.CheckSAIndexes();
+
+	Aligner aligner(&prog_info, &genome);
 	
 	//will do the pairing of reads
 	aligner.PairReads();
@@ -103,7 +106,24 @@ int main(int argc, char* argv[])
 	aligner.AlignReads();
 
 	//nacist do pameti ready
-	List<Read*>* reads = 
+	List<Read>* reads = aligner.Reads();
+
+	ListIterator<Read> iterator(reads->First());
+	while (iterator.Current() != NULL){
+		Read* r = iterator.Current()->Value();
+
+		ListIterator<Alignment> a_iterator(r->alignments->First());
+
+		while(a_iterator.Current() != NULL){
+			Alignment* a = a_iterator.Current()->Value();
+
+			cout << a->chromosome << "\t" << a->pos << endl;
+
+			a_iterator.Next();
+		}
+
+		iterator.Next();
+	}
 
 	//vytvorit pro kazdy read pole alignmentu na prislusnych chromozomech
 

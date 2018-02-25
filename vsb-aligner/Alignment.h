@@ -6,6 +6,11 @@ class Alignment
 {
 public:
 	Alignment() {};
+	Alignment(char* chrom, u_int c_pos) {
+		chromosome = chrom;
+		pos = c_pos;
+	};
+
 	~Alignment() {};
 
 	/* c-string ukonceny nulou */

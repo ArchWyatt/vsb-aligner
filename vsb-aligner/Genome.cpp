@@ -275,6 +275,30 @@ void Genome::PrepareIndexes()
 	}
 }
 
+void Genome::CheckSAIndexes()
+{
+	char* sa_index_name = Utils::StrAppend(this->genome_path, ".sa");
+	ifstream sa_file(sa_index_name, ios::binary);
+
+	ListIterator<GenomeRegion> iterator(chromosome_list->First());
+	long long start_pos = 0;
+	while (iterator.Current() != NULL) {
+		GenomeRegion* region = iterator.Current()->Value();
+		cout << region->chromosome_id << endl;
+
+		u_int* test = new u_int[1];
+
+		sa_file.seekg(start_pos);
+
+		sa_file.read((char*)test, 4);
+		cout << test[0] << " \t " << region->bases_number << endl;
+		start_pos += 4 * (region->bases_number + 1);
+		delete[] test;
+
+		iterator.Next();
+	}
+}
+
 char Genome::ReverseComplement(char base)
 {
 	if (base == 'A')

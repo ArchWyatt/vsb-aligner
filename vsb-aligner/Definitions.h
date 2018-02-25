@@ -48,6 +48,8 @@ public:
 		fq_R = NULL;		
 		genome_path = NULL;		
 		sam_file = NULL;
+
+		aligner_min_split_size = 20;
 	};
 
 	~ProgInfo() {		
@@ -74,4 +76,8 @@ public:
 
 	/* Computation related options */
 	ProgOptions* options;
+
+	/* Aligner */
+	/* Pigeon hole minimum split size */
+	u_char aligner_min_split_size;
 };

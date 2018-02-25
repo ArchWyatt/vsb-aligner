@@ -80,7 +80,7 @@ public:
 	SuffixArray(char* sequence, u_int sequence_length);
 
 	/* to load index from file */
-	SuffixArray(char* index_path, char* bases, u_int pos_start, u_int length);
+	SuffixArray(char* index_path, char* bases, long long pos_start, u_int length);
 
 	/* destruct */
 	~SuffixArray();

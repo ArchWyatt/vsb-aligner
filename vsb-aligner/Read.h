@@ -22,19 +22,20 @@ class Read
 public:
 	Read() {		
 		paired_read = NULL;
-		alignments = new List<Alignment*>();
+		alignments = new List<Alignment>();
 	};
 
 	Read(char* desc, char* seq, char* comm, char* qual, u_char type) {
 		sequence = seq;
-		descriptor = desc;		
+		seq_len = strlen(sequence);
+		descriptor = desc;
 		quality = qual;
 		read_type = type;
 		read_idx1 = 0;
 		read_idx2 = 0;
 
 		paired_read = NULL;
-		alignments = new List<Alignment*>();
+		alignments = new List<Alignment>();
 	};
 
 	~Read() {
@@ -50,6 +51,8 @@ public:
 	Read* paired_read;
 
 	char* sequence;
+	u_int seq_len;
+
 	char* descriptor;
 	char* name;	
 	char* comment;
@@ -62,7 +65,7 @@ public:
 	/*
 		Pole alignmentu.
 	*/
-	List<Alignment*>* alignments;
+	List<Alignment>* alignments;
 	/*
 		Delka pole alignmentu.
 	*/
