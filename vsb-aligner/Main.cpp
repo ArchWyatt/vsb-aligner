@@ -1,10 +1,13 @@
 #include <iostream>
 #include <cstring>
+#include <chrono>
 
 #include "Aligner.h"
 #include "Definitions.h"
 #include "Genome.h"
 #include "Read.h"
+#include "Needleman_Wunch.h"
+#include "Needleman_Wunch_Old.h"
 
 using namespace std;
 
@@ -131,6 +134,23 @@ int main(int argc, char* argv[])
 	/*
 		Sekce: Martin Kubala
 	*/
+		auto start = chrono::high_resolution_clock::now();
+
+		//string a = "GGATCGA"; // Read Sequence
+		//string b = "TGAATTCAGTTA"; //Reference Sequence
+		string a = "ACTAGAATGGCT";
+		string b = "CCATACTGAACTGACTAAC";
+
+		int gap_score = -2;
+		int match_score = 5;
+		int mismatch_score = -1;
+		Needleman_Wunch *test = new Needleman_Wunch(a, b, gap_score, match_score, mismatch_score);
+		//Needleman_Wunch_Old *test = new Needleman_Wunch_Old(a, b, gap_score, match_score, mismatch_score);
+		auto elapsed = chrono::high_resolution_clock::now() - start;
+		long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+		cout << "Runtime in microseconds: " << microseconds << endl;
+		system("pause");
+	
 	
 
 	return EXIT_SUCCESS;
