@@ -252,6 +252,8 @@ void Aligner::AlignReads()
 		}
 
 		chrom_start += chromosome->bases_number + 1;
+
+		m_genome->ReleaseChromosome(chromosome);
 		chromosome_iterator.Next();
 	}
 }

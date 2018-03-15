@@ -45,7 +45,7 @@ SuffixArray::SuffixArray(char* index_path, char* bases, long long pos_start, u_i
 SuffixArray::~SuffixArray()
 {
 	delete[] s_array;
-	delete[] m_sequence;
+	//delete[] m_sequence;
 	delete[] m_bwt;
 	delete[] m_offsets;
 	delete[] m_rank;	
