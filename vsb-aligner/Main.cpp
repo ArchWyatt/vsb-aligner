@@ -111,6 +111,7 @@ int main(int argc, char* argv[])
 	//nacist do pameti ready
 	List<Read>* reads = aligner.Reads();
 
+	//pouze demonstrace pruchodu mnozinou alignmentu pro kazdy read
 	ListIterator<Read> iterator(reads->First());
 	while (iterator.Current() != NULL){
 		Read* r = iterator.Current()->Value();
@@ -120,16 +121,13 @@ int main(int argc, char* argv[])
 		while(a_iterator.Current() != NULL){
 			Alignment* a = a_iterator.Current()->Value();
 
-			cout << a->chromosome << "\t" << a->pos << endl;
+			//cout << a->chromosome << "\t" << a->pos << endl;
 
 			a_iterator.Next();
 		}
 
 		iterator.Next();
 	}
-
-	//vytvorit pro kazdy read pole alignmentu na prislusnych chromozomech
-
 	/*
 		Sekce: Martin Kubala
 	*/

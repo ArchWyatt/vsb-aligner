@@ -84,7 +84,12 @@ void Genome::FetchChromosome(GenomeRegion* region)
 
 void Genome::ReleaseChromosome(GenomeRegion* region)
 {
+	/*
+		If suffix array already built, then we have to delete bases manualy.
+	*/
+	//if(suffix_built)
 	delete[] region->bases;
+
 	region->bases = NULL;
 }
 
