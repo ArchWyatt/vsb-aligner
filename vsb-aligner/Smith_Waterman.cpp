@@ -88,14 +88,15 @@ Smith_Waterman::Smith_Waterman(string a, string b, int gap_score, int match_scor
 			SB.push('-');
 			pos_i = pos_i - 1;
 		}
-		else if (move == 2) { // LEFT move
+		else if (move == 3) { // LEFT move
 			SA.push('-');
 			SB.push(bb[pos_j - 1]);
 			pos_j = pos_j - 1;
 		}
-		else { // Error, program should not move here
+		else { // Error, program should not move 
 			cout << "Chyba programu" << endl;
 		}
+		move = NextMove(pos_i, pos_j);
 	}
 	SA.push(aa[pos_i - 1]);
 	SB.push(bb[pos_j - 1]);
@@ -152,10 +153,9 @@ int Smith_Waterman::NextMove(int pos_i, int pos_j) {
 	int diag = this->ScoringMatrix[pos_i - 1][pos_j - 1];
 	int up = this->ScoringMatrix[pos_i - 1][pos_j];
 	int left = this->ScoringMatrix[pos_i][pos_j - 1];
-
 	if (diag >= up && diag >= left) { // Move diag
 		if (diag !=0) { // 1 signals a DIAG move. 0 signals the end.
-			return 1;
+			return (int) 1;
 		}
 		else {
 			return 0;
@@ -163,7 +163,7 @@ int Smith_Waterman::NextMove(int pos_i, int pos_j) {
 	}
 	else if (up > diag && up >= left) {
 		if (up != 0) { // 2 signals a UP move. 0 signals the end.
-			return 2;
+			return (int) 2;
 		}
 		else {
 			return 0;
@@ -171,13 +171,14 @@ int Smith_Waterman::NextMove(int pos_i, int pos_j) {
 	}
 	else if (left > diag && left > up) {
 		if (left != 0) { // 3 signals a LEFT move. 0 signals the end.
-			return 3;
+			return (int) 3;
 		}
 		else {
 			return 0;
 		}
 	}
 	else {
+		cout << "Chyba programu" << endl;
 		return 4;
 	}
 }

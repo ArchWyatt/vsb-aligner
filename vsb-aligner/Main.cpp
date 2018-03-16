@@ -105,18 +105,18 @@ int main(int argc, char* argv[])
 	
 	//check indexes
 	genome.CheckSAIndexes();
-	
+	system("pause");
 	Aligner aligner(&prog_info, &genome);
 	system("pause");
 	//will do the pairing of reads
 	aligner.PairReads();
-
+	system("pause");
 	//will assign each read (0,1 or multiple) alignments
 	aligner.AlignReads();
-
+	system("pause");
 	//nacist do pameti ready
 	List<Read>* reads = aligner.Reads();
-
+	system("pause");
 	//pouze demonstrace pruchodu mnozinou alignmentu pro kazdy read
 	ListIterator<Read> iterator(reads->First());
 	while (iterator.Current() != NULL){
