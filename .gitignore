@@ -9,7 +9,9 @@
 *.vcxproj
 *.filters
 Debug/*
+x64/*
 Release/*
 vsb-aligner/Debug/*
 vsb-aligner/Release/*
 vsb-aligner/data/*
+vsb-aligner/x64/*
