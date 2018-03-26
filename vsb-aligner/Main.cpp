@@ -27,19 +27,21 @@ void ParseArguments(int argc, char* argv[], ProgInfo* prog_info)
 	while (arg_id < argc) {
 		if (strcmp(argv[arg_id], "-r1") == 0) {
 			prog_info->fq_F = argv[arg_id + 1];
+			cerr << prog_info->fq_F << endl;
 		}
 		else if (strcmp(argv[arg_id], "-r2") == 0) {
 			prog_info->fq_R = argv[arg_id + 1];
+			cerr << prog_info->fq_R << endl;
 		}
 		else if (strcmp(argv[arg_id], "-g") == 0) {
 			prog_info->genome_path = argv[arg_id + 1];
+			cerr << prog_info->genome_path << endl;
 		}		
 		else {
 			cerr << "Unknown option: " << argv[arg_id] << endl;
 			PrintUsage();
 			exit(EXIT_FAILURE);
 		}
-
 		arg_id += 2;
 	}
 }
@@ -78,42 +80,43 @@ int main(int argc, char* argv[])
 
 	/* parse arguments */
 	ParseArguments(argc, argv, &prog_info);
-
+	
 	/* verify arguments */
 	Verify(&prog_info);
-
+	
 	/* verify existence of genome and fai  file */
 	if (!Genome::GenomeExists(prog_info.genome_path)) {
 		cerr << "Genome path: " << prog_info.genome_path << " doesn't exist." << endl;
 		exit(EXIT_FAILURE);
 	}
+
 	if (!Genome::GenomeIndexExists(prog_info.genome_path)) {
 		cerr << "Index for genome: " << prog_info.genome_path << " doesn't exist in the same folder." << endl;
 		exit(EXIT_FAILURE);
 	}
-
+	
 	Genome genome(prog_info.genome_path);
-
+	
 	//zkotnrolovat existenci sa-indexu
 	if (!Genome::SAIndexExists(prog_info.genome_path)) {
 		cout << "Suffix array not found." << endl << "Beginning suffix array build... :" << endl;
 		genome.PrepareIndexes();
 	}
-
+	
 	//check indexes
 	genome.CheckSAIndexes();
-
+	system("pause");
 	Aligner aligner(&prog_info, &genome);
-	
+	system("pause");
 	//will do the pairing of reads
 	aligner.PairReads();
-
+	system("pause");
 	//will assign each read (0,1 or multiple) alignments
 	aligner.AlignReads();
-
+	system("pause");
 	//nacist do pameti ready
 	List<Read>* reads = aligner.Reads();
-
+	system("pause");
 	//pouze demonstrace pruchodu mnozinou alignmentu pro kazdy read
 	ListIterator<Read> iterator(reads->First());
 	while (iterator.Current() != NULL){
@@ -149,8 +152,12 @@ int main(int argc, char* argv[])
 		//Needleman_Wunch_Old *test = new Needleman_Wunch_Old(a, b, gap_score, match_score, mismatch_score);
 		auto elapsed = chrono::high_resolution_clock::now() - start;
 		long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+
 		cout << "Runtime in microseconds: " << microseconds << endl;
 		system("pause");
+	
+
+		cout << "Runtime in microseconds: " << microseconds << endl;	
 	*/
 	
 
