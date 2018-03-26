@@ -105,9 +105,9 @@ int main(int argc, char* argv[])
 	
 	//check indexes
 	genome.CheckSAIndexes();
-	system("pause");
+	
 	Aligner aligner(&prog_info, &genome);
-	system("pause");
+	
 	//will do the pairing of reads
 	aligner.PairReads();
 	system("pause");

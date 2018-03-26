@@ -1,0 +1,73 @@
+﻿  SuffixArray.cpp
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(65): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(115): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(130): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(140): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(174): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(189): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(190): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+  Smith_Waterman.cpp
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\smith_waterman.cpp(12): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\smith_waterman.cpp(13): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Needleman_Wunch_Old.cpp
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\needleman_wunch_old.cpp(11): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\needleman_wunch_old.cpp(12): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\needleman_wunch_old.cpp(81): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\needleman_wunch_old.cpp(82): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Needleman_Wunch.cpp
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\needleman_wunch.cpp(13): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\needleman_wunch.cpp(14): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\needleman_wunch.cpp(86): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\needleman_wunch.cpp(87): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\needleman_wunch.cpp(84): warning C4101: 'xCigar': unreferenced local variable
+  Main.cpp
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(65): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(115): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(130): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(140): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(174): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(189): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(190): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\read.h(30): warning C4267: '=': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\read.h(81): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\main.cpp(27): warning C4018: '<': signed/unsigned mismatch
+  Genome.cpp
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(65): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(115): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(130): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(140): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(174): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(189): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(190): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\genome.cpp(223): warning C4244: '=': conversion from 'std::streamoff' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\genome.cpp(231): warning C4244: '=': conversion from 'std::streamoff' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\genome.cpp(243): warning C4244: '=': conversion from 'std::streamoff' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\genome.cpp(329): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\genome.cpp(345): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\hash.h(113): warning C4244: '+=': conversion from 'long double' to 'u_int', possible loss of data
+  c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\hash.h(109): note: while compiling class template member function 'u_int Hash<GenomeRegion>::HashFunction(char *)'
+  c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\hash.h(98): note: see reference to function template instantiation 'u_int Hash<GenomeRegion>::HashFunction(char *)' being compiled
+  c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\genome.cpp(23): note: see reference to class template instantiation 'Hash<GenomeRegion>' being compiled
+  Aligner.cpp
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(65): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(115): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(116): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(130): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(140): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(174): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(189): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\utils.h(190): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\read.h(30): warning C4267: '=': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\read.h(81): warning C4267: 'initializing': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\aligner.cpp(58): warning C4267: '=': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\aligner.cpp(69): warning C4267: '=': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\aligner.cpp(76): warning C4267: '=': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\aligner.cpp(80): warning C4267: '=': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\aligner.cpp(90): warning C4267: '=': conversion from 'size_t' to 'u_int', possible loss of data
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\aligner.cpp(180): warning C4267: 'argument': conversion from 'size_t' to 'u_int', possible loss of data
+  Generating Code...
+c:\users\marti\documents\visual studio 2017\projects\vsb-aligner\vsb-aligner\suffixarray.cpp(326): warning C4715: 'SuffixArray::Verify': not all control paths return a value
+  vsb-aligner.vcxproj -> C:\Users\Marti\Documents\Visual Studio 2017\Projects\vsb-aligner\x64\Debug\vsb-aligner.exe
