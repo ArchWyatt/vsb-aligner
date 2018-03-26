@@ -8,6 +8,7 @@
 #include "Read.h"
 #include "Needleman_Wunch.h"
 #include "Needleman_Wunch_Old.h"
+#include "Smith_Waterman.h"
 
 using namespace std;
 
@@ -110,12 +111,13 @@ int main(int argc, char* argv[])
 	
 	//will do the pairing of reads
 	aligner.PairReads();
-	system("pause");
+	
 	//will assign each read (0,1 or multiple) alignments
 	aligner.AlignReads();
-	system("pause");
+	
 	//nacist do pameti ready
 	List<Read>* reads = aligner.Reads();
+	cout << "Zde bude demonstrace pruchodu mnozinou aligmentu pro kazdy read" << endl;
 	system("pause");
 	//pouze demonstrace pruchodu mnozinou alignmentu pro kazdy read
 	ListIterator<Read> iterator(reads->First());
@@ -134,31 +136,33 @@ int main(int argc, char* argv[])
 
 		iterator.Next();
 	}
+	cout << "Zde zacina ma cast" << endl;
+	system("pause");
 	/*
 		Sekce: Martin Kubala
 	*/
-	/*
-		auto start = chrono::high_resolution_clock::now();
 
-		//string a = "GGATCGA"; // Read Sequence
-		//string b = "TGAATTCAGTTA"; //Reference Sequence
-		string a = "ACTAGAATGGCT";
-		string b = "CCATACTGAACTGACTAAC";
+	u_int rozsah = 20; //Rozsah genom zvetsen o n znaku pred a n znaku po genomu pro vetsi presnost urceni pozice genomu.
 
-		int gap_score = -2;
-		int match_score = 5;
-		int mismatch_score = -1;
-		Needleman_Wunch *test = new Needleman_Wunch(a, b, gap_score, match_score, mismatch_score);
-		//Needleman_Wunch_Old *test = new Needleman_Wunch_Old(a, b, gap_score, match_score, mismatch_score);
-		auto elapsed = chrono::high_resolution_clock::now() - start;
-		long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+	auto start = chrono::high_resolution_clock::now();
 
-		cout << "Runtime in microseconds: " << microseconds << endl;
-		system("pause");
+	string a = "ACTAGAATGGCT"; // Read Sequence
+	string b = "CCATACTGAACTGACTAAC"; //Reference Sequence
+
+	int gap_score = -2;
+	int match_score = 5;
+	int mismatch_score = -1;
+	//Needleman_Wunch *test = new Needleman_Wunch(a, b, gap_score, match_score, mismatch_score);
+	//Needleman_Wunch_Old *test = new Needleman_Wunch_Old(a, b, gap_score, match_score, mismatch_score);
+	Smith_Waterman *test = new Smith_Waterman(a, b, gap_score, match_score, mismatch_score);
+	auto elapsed = chrono::high_resolution_clock::now() - start;
+	long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+
+	cout << "Runtime in microseconds: " << microseconds << endl;
+	system("pause");
 	
 
-		cout << "Runtime in microseconds: " << microseconds << endl;	
-	*/
+	cout << "Runtime in microseconds: " << microseconds << endl;	
 	
 
 	return EXIT_SUCCESS;

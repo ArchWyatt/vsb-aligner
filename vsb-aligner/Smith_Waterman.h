@@ -10,7 +10,7 @@ class Smith_Waterman
 {
 private:
 	string a = "";				//Sequence 1
-	string b = "";				//Sequence 2
+	string b = "";				//Sequence 2 (Reference)
 	char *aa;					//Sequence 1 in char array
 	char *bb;					//Sequence 2 in char array
 	int gap_score = 0;
