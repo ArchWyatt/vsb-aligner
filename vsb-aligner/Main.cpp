@@ -134,6 +134,7 @@ int main(int argc, char* argv[])
 	/*
 		Sekce: Martin Kubala
 	*/
+	/*
 		auto start = chrono::high_resolution_clock::now();
 
 		//string a = "GGATCGA"; // Read Sequence
@@ -150,7 +151,7 @@ int main(int argc, char* argv[])
 		long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
 		cout << "Runtime in microseconds: " << microseconds << endl;
 		system("pause");
-	
+	*/
 	
 
 	return EXIT_SUCCESS;

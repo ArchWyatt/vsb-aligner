@@ -79,8 +79,8 @@ void SuffixArray::PrepareBWT()
 	for (u_int i = 1; i < 256; i++)
 		m_offsets[i] = m_offsets[i - 1] + f[i-1];
 	
-	delete[] m_sequence;
-	m_sequence = NULL;
+	//delete[] m_sequence;
+	//m_sequence = NULL;
 }
 
 void SuffixArray::RadixSortRecursive(u_int start, u_int end, u_int level)
