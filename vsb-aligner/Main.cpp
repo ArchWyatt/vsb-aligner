@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
 
 	//Needleman_Wunch *test = new Needleman_Wunch(a, b, gap_score, match_score, mismatch_score);
 	//Needleman_Wunch_Old *test = new Needleman_Wunch_Old(a, b, gap_score, match_score, mismatch_score);
-	//Smith_Waterman *test = new Smith_Waterman(a, b, gap_score, match_score, mismatch_score);
+	
 
 	ListIterator<Read> iterator(reads->First());
 	while (iterator.Current() != NULL){
@@ -145,9 +145,16 @@ int main(int argc, char* argv[])
 
 		while(a_iterator.Current() != NULL){
 			Alignment* a = a_iterator.Current()->Value();
+			//cigar ulozit do aligmentu
 
 			//cout << a->chromosome << "\t" << a->pos << endl;
-			char *genome_pos = genome.BaseIntervalDisc(a->chromosome, a->pos, a->pos + r->seq_len - 1);   //Zde bych přidal ten interval +/- 20? ať se mi vrátí 
+			char *genome_pos = genome.BaseIntervalDisc(a->chromosome, a->pos, a->pos + r->seq_len - 1);   //Zde bych přidal ten interval +/- 20? reference genome OK kdyz dam interval +/- 20
+			
+																						  
+			//Smith_Waterman *test = new Smith_Waterman(, , gap_score, match_score, mismatch_score);
+			
+			Read* r2 = r->paired_read;
+
 			cout << genome_pos << endl;
 
 			a_iterator.Next();

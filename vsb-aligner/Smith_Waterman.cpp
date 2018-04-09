@@ -34,7 +34,7 @@ Smith_Waterman::Smith_Waterman(string a, string b, int gap_score, int match_scor
 	}
 
 	/* Fill Matrix
-		
+
 	*/
 	for (int i = 1; i < lena; i++) {
 		for (int j = 1; j < lenb; j++) {
@@ -66,13 +66,12 @@ Smith_Waterman::Smith_Waterman(string a, string b, int gap_score, int match_scor
 	cout << "Matrix max score coordinates is i: " << this->i_max << " j: " << this->j_max << endl;
 
 	/*	Traceback
-		diagonal: match/mismatch
-		up:       gap in sequence 1
-		left:     gap in sequence 2
+	diagonal: match/mismatch
+	up:       gap in sequence 1
+	left:     gap in sequence 2
 	*/
 	string RetA, RetB;
-	char *xA, *xB;
-	stack<char> SA, SB;
+	stack<char> SA, SB, SCigar;
 	int pos_i = this->i_max;
 	int pos_j = this->j_max;
 	int move = NextMove(pos_i, pos_j);
@@ -80,17 +79,20 @@ Smith_Waterman::Smith_Waterman(string a, string b, int gap_score, int match_scor
 		if (move == 1) { // Diagonal move
 			SA.push(aa[pos_i - 1]);
 			SB.push(bb[pos_j - 1]);
+			SCigar.push('M');
 			pos_i = pos_i - 1;
 			pos_j = pos_j - 1;
 		}
 		else if (move == 2) { // UP move
 			SA.push(aa[pos_i - 1]);
 			SB.push('-');
+			SCigar.push('I');
 			pos_i = pos_i - 1;
 		}
 		else if (move == 3) { // LEFT move
 			SA.push('-');
 			SB.push(bb[pos_j - 1]);
+			SCigar.push('D');
 			pos_j = pos_j - 1;
 		}
 		else { // Error, program should not move 
@@ -98,29 +100,31 @@ Smith_Waterman::Smith_Waterman(string a, string b, int gap_score, int match_scor
 		}
 		move = NextMove(pos_i, pos_j);
 	}
-
 	this->i_min = pos_i;
 	this->j_min = pos_j;
-
 	SA.push(aa[pos_i - 1]);
 	SB.push(bb[pos_j - 1]);
-
-	xA = new char[SA.size()];
-	xB = new char[SB.size()];
+	SCigar.push('M');
 
 	while (!SA.empty())
 	{
 		RetA += SA.top();
 		RetB += SB.top();
+		this->cigar_str += SCigar.top();
 		SA.pop();
 		SB.pop();
+		SCigar.pop();
 	}
 
-	strcpy(xA, RetA.c_str());
-	strcpy(xB, RetB.c_str());
+	//CIGAR String computing
+	this->cigar = new char[this->cigar_str.length()];
+	strcpy(this->cigar, this->cigar_str.c_str());
+	cigar_str = Cigar(this->cigar);
 
-	cout << "AlignmentA: " << RetA << endl;
-	cout << "AlignmentB: " << RetB << endl;
+	cout << "AlignmentA          : " << RetA << endl;
+	cout << "AlignmentB Reference: " << RetB << endl;
+	cout << "Cigar               : " << this->cigar_str << endl;
+
 }
 
 int Smith_Waterman::CalculateScore(int i, int j)
@@ -141,14 +145,11 @@ int Smith_Waterman::CalculateScore(int i, int j)
 	if (diag_score > max) {
 		max = diag_score;
 	}
-	else if (up_score > max) {
+	if (up_score > max) {
 		max = up_score;
 	}
-	else if (left_score > max) {
+	if (left_score > max) {
 		max = left_score;
-	}
-	else {
-		return max;
 	}
 	return max;
 }
@@ -158,8 +159,8 @@ int Smith_Waterman::NextMove(int pos_i, int pos_j) {
 	int up = this->ScoringMatrix[pos_i - 1][pos_j];
 	int left = this->ScoringMatrix[pos_i][pos_j - 1];
 	if (diag >= up && diag >= left) { // Move diag
-		if (diag !=0) { // 1 signals a DIAG move. 0 signals the end.
-			return (int) 1;
+		if (diag != 0) { // 1 signals a DIAG move. 0 signals the end.
+			return (int)1;
 		}
 		else {
 			return 0;
@@ -167,7 +168,7 @@ int Smith_Waterman::NextMove(int pos_i, int pos_j) {
 	}
 	else if (up > diag && up >= left) {
 		if (up != 0) { // 2 signals a UP move. 0 signals the end.
-			return (int) 2;
+			return (int)2;
 		}
 		else {
 			return 0;
@@ -175,7 +176,7 @@ int Smith_Waterman::NextMove(int pos_i, int pos_j) {
 	}
 	else if (left > diag && left > up) {
 		if (left != 0) { // 3 signals a LEFT move. 0 signals the end.
-			return (int) 3;
+			return (int)3;
 		}
 		else {
 			return 0;
@@ -187,6 +188,71 @@ int Smith_Waterman::NextMove(int pos_i, int pos_j) {
 	}
 }
 
+string Smith_Waterman::Cigar(char *a) {
+	string test = "";
+	int M = 0;
+	int I = 0;
+	int D = 0;
+	for (int i = 0; i < strlen(a); i++) {
+		if (a[i] == 'M') {
+			M += 1;
+			if (I > 0) {
+				test += to_string(I);
+				test += 'I';
+				I = 0;
+			}
+			else if (D > 0) {
+				test += to_string(D);
+				test += 'D';
+				D = 0;
+			}
+		}
+		else if (a[i] == 'I') {
+			I += 1;
+			if (M > 0) {
+				test += to_string(M);
+				test += 'M';
+				M = 0;
+			}
+			else if (D > 0) {
+				test += to_string(D);
+				test += 'D';
+				D = 0;
+			}
+		}
+		else if (a[i] == 'D') {
+			D += 1;
+			if (M > 0) {
+				test += to_string(M);
+				test += 'M';
+				M = 0;
+			}
+			else if (I > 0) {
+				test += to_string(I);
+				test += 'I';
+				I = 0;
+			}
+		}
+	}
+
+	if (M > 0) {
+		test += to_string(M);
+		test += 'M';
+		M = 0;
+	}
+	else if (I > 0) {
+		test += to_string(I);
+		test += 'I';
+		I = 0;
+	}
+	else if (D > 0) {
+		test += to_string(D);
+		test += 'D';
+		D = 0;
+	}
+	return test;
+}
+
 int Smith_Waterman::get_first_pos() {
 	return this->j_min;
 }
@@ -194,6 +260,15 @@ int Smith_Waterman::get_first_pos() {
 int Smith_Waterman::get_last_pos() {
 	return this->j_max;
 }
+
+string Smith_Waterman::get_cigar() {
+	return this->cigar_str;
+}
+
+int Smith_Waterman::get_matrix_max_score() {
+	return this->matrix_max;
+}
+
 
 Smith_Waterman::~Smith_Waterman()
 {

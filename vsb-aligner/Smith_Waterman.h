@@ -10,9 +10,11 @@ class Smith_Waterman
 {
 private:
 	string a = "";				//Sequence 1
-	string b = "";				//Sequence 2 (Reference)
+	string b = "";				//Sequence 2
 	char *aa;					//Sequence 1 in char array
 	char *bb;					//Sequence 2 in char array
+	char *cigar;				//Temporary cigar before final version
+	string cigar_str = "";		//Cigar string computed in Smith_Waterman
 	int gap_score = 0;
 	int match_score = 0;
 	int mismatch_score = 0;
@@ -28,4 +30,8 @@ public:
 	~Smith_Waterman();
 	int get_first_pos();
 	int get_last_pos();
+	string Cigar(char *a);
+	string get_cigar();
+	int get_matrix_max_score();
+
 };
