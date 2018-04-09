@@ -98,6 +98,10 @@ Smith_Waterman::Smith_Waterman(string a, string b, int gap_score, int match_scor
 		}
 		move = NextMove(pos_i, pos_j);
 	}
+
+	this->i_min = pos_i;
+	this->j_min = pos_j;
+
 	SA.push(aa[pos_i - 1]);
 	SB.push(bb[pos_j - 1]);
 
@@ -181,6 +185,14 @@ int Smith_Waterman::NextMove(int pos_i, int pos_j) {
 		cout << "Chyba programu" << endl;
 		return 4;
 	}
+}
+
+int Smith_Waterman::get_first_pos() {
+	return this->j_min;
+}
+
+int Smith_Waterman::get_last_pos() {
+	return this->j_max;
 }
 
 Smith_Waterman::~Smith_Waterman()

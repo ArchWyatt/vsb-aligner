@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <cstring>
 #include <chrono>
 
@@ -117,9 +117,26 @@ int main(int argc, char* argv[])
 	
 	//nacist do pameti ready
 	List<Read>* reads = aligner.Reads();
-	cout << "Zde bude demonstrace pruchodu mnozinou aligmentu pro kazdy read" << endl;
+	cout << "Zde zacina ma cast" << endl;
+
 	system("pause");
-	//pouze demonstrace pruchodu mnozinou alignmentu pro kazdy read
+	/*
+	Sekce: Martin Kubala
+	*/
+
+	auto start = chrono::high_resolution_clock::now();
+	u_int rozsah = 20; //Rozsah genom zvetsen o n znaku pred a n znaku po genomu pro vetsi presnost urceni pozice genomu.
+	//string a = "ACTAGAATGGCT"; // Read Sequence
+	//string b = "CCATACTGAACTGACTAAC"; //Reference Sequence
+
+	int gap_score = -2;
+	int match_score = 5;
+	int mismatch_score = -1;
+
+	//Needleman_Wunch *test = new Needleman_Wunch(a, b, gap_score, match_score, mismatch_score);
+	//Needleman_Wunch_Old *test = new Needleman_Wunch_Old(a, b, gap_score, match_score, mismatch_score);
+	//Smith_Waterman *test = new Smith_Waterman(a, b, gap_score, match_score, mismatch_score);
+
 	ListIterator<Read> iterator(reads->First());
 	while (iterator.Current() != NULL){
 		Read* r = iterator.Current()->Value();
@@ -130,40 +147,25 @@ int main(int argc, char* argv[])
 			Alignment* a = a_iterator.Current()->Value();
 
 			//cout << a->chromosome << "\t" << a->pos << endl;
+			char *genome_pos = genome.BaseIntervalDisc(a->chromosome, a->pos, a->pos + r->seq_len - 1);   //Zde bych přidal ten interval +/- 20? ať se mi vrátí 
+			cout << genome_pos << endl;
 
 			a_iterator.Next();
 		}
 
 		iterator.Next();
 	}
-	cout << "Zde zacina ma cast" << endl;
-	system("pause");
-	/*
-		Sekce: Martin Kubala
-	*/
 
-	u_int rozsah = 20; //Rozsah genom zvetsen o n znaku pred a n znaku po genomu pro vetsi presnost urceni pozice genomu.
-
-	auto start = chrono::high_resolution_clock::now();
-
-	string a = "ACTAGAATGGCT"; // Read Sequence
-	string b = "CCATACTGAACTGACTAAC"; //Reference Sequence
-
-	int gap_score = -2;
-	int match_score = 5;
-	int mismatch_score = -1;
-	//Needleman_Wunch *test = new Needleman_Wunch(a, b, gap_score, match_score, mismatch_score);
-	//Needleman_Wunch_Old *test = new Needleman_Wunch_Old(a, b, gap_score, match_score, mismatch_score);
-	Smith_Waterman *test = new Smith_Waterman(a, b, gap_score, match_score, mismatch_score);
 	auto elapsed = chrono::high_resolution_clock::now() - start;
 	long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
-
+	long long milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
+	long long seconds = std::chrono::duration_cast<std::chrono::seconds>(elapsed).count();
+	long long minutes = std::chrono::duration_cast<std::chrono::minutes>(elapsed).count();
 	cout << "Runtime in microseconds: " << microseconds << endl;
+	cout << "Runtime in miliseconds: " << milliseconds << endl;
+	cout << "Runtime in seconds: " << seconds << endl;
+	cout << "Runtime in minutes: " << minutes << endl;
 	system("pause");
-	
-
-	cout << "Runtime in microseconds: " << microseconds << endl;	
-	
 
 	return EXIT_SUCCESS;
 }
