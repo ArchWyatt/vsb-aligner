@@ -8,9 +8,12 @@
 *.pdb
 *.vcxproj
 *.filters
+*.user
 Debug/*
+x64/*
 Release/*
 vsb-aligner/Debug/*
 vsb-aligner/Release/*
 vsb-aligner/data/*
 *user
+vsb-aligner/x64/*
