@@ -15,5 +15,5 @@ Release/*
 vsb-aligner/Debug/*
 vsb-aligner/Release/*
 vsb-aligner/data/*
-*user
+*.user
 vsb-aligner/x64/*
