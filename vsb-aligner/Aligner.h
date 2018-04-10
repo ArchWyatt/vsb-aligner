@@ -24,6 +24,8 @@ protected:
 	
 	void InitializeReads(char* reads_path, u_char read_type);
 
+	void AlignOneRead(GenomeRegion* chromosome, SuffixArray* sa, Read* r);
+
 public:
 	Aligner();
 	Aligner(ProgInfo* prog_info, Genome* genome);

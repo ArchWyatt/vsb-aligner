@@ -27,16 +27,13 @@ void ParseArguments(int argc, char* argv[], ProgInfo* prog_info)
 	u_int arg_id = 1;
 	while (arg_id < argc) {
 		if (strcmp(argv[arg_id], "-r1") == 0) {
-			prog_info->fq_F = argv[arg_id + 1];
-			cerr << prog_info->fq_F << endl;
+			prog_info->fq_F = argv[arg_id + 1];			
 		}
 		else if (strcmp(argv[arg_id], "-r2") == 0) {
-			prog_info->fq_R = argv[arg_id + 1];
-			cerr << prog_info->fq_R << endl;
+			prog_info->fq_R = argv[arg_id + 1];			
 		}
 		else if (strcmp(argv[arg_id], "-g") == 0) {
-			prog_info->genome_path = argv[arg_id + 1];
-			cerr << prog_info->genome_path << endl;
+			prog_info->genome_path = argv[arg_id + 1];			
 		}		
 		else {
 			cerr << "Unknown option: " << argv[arg_id] << endl;
@@ -49,9 +46,9 @@ void ParseArguments(int argc, char* argv[], ProgInfo* prog_info)
 
 void PrintArgs(ProgInfo* prog_info)
 {
-	cout << "Aligner: " << endl;
-	cout << "Reads R1: " << prog_info->fq_F;
-	cout << "Reads R2: " << prog_info->fq_R;
+	cout << "Aligner: vsb-aligner" << endl;
+	cout << "Reads R1: " << prog_info->fq_F << endl;
+	cout << "Reads R2: " << prog_info->fq_R << endl;
 	cout << "Genome: " << prog_info->genome_path << endl << endl;	
 }
 
@@ -81,9 +78,12 @@ int main(int argc, char* argv[])
 
 	/* parse arguments */
 	ParseArguments(argc, argv, &prog_info);
-	
+		
 	/* verify arguments */
 	Verify(&prog_info);
+
+	/* print arguments */
+	PrintArgs(&prog_info);
 	
 	/* verify existence of genome and fai  file */
 	if (!Genome::GenomeExists(prog_info.genome_path)) {
@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
 	List<Read>* reads = aligner.Reads();
 	cout << "Zde zacina ma cast" << endl;
 
-	system("pause");
+	//system("pause");
 	/*
 	Sekce: Martin Kubala
 	*/
@@ -136,7 +136,6 @@ int main(int argc, char* argv[])
 	//Needleman_Wunch *test = new Needleman_Wunch(a, b, gap_score, match_score, mismatch_score);
 	//Needleman_Wunch_Old *test = new Needleman_Wunch_Old(a, b, gap_score, match_score, mismatch_score);
 	
-
 	ListIterator<Read> iterator(reads->First());
 	while (iterator.Current() != NULL){
 		Read* r = iterator.Current()->Value();

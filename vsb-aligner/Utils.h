@@ -182,6 +182,22 @@ public:
 	};
 
 	/*
+		String reverse in place.
+	*/
+	static char* StrReverseSelf(char* src)
+	{
+		u_int s_len = strlen(src);
+
+		for (u_int i = 0; i < s_len / 2; i++) {
+			char aux = src[i];
+			src[i] = src[s_len - i - 1];
+			src[s_len - i - 1] = aux;
+		}
+
+		return src;
+	}
+
+	/*
 		Function that matches pattern in the position into target splitted by delimiter.
 	*/
 	static bool IsInPositionByDelimiter(char* pattern, char* target, char delimiter, u_int position)
