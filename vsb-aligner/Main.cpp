@@ -126,8 +126,6 @@ int main(int argc, char* argv[])
 
 	auto start = chrono::high_resolution_clock::now();
 	u_int rozsah = 20; //Rozsah genom zvetsen o n znaku pred a n znaku po genomu pro vetsi presnost urceni pozice genomu.
-	//string a = "ACTAGAATGGCT"; // Read Sequence
-	//string b = "CCATACTGAACTGACTAAC"; //Reference Sequence
 
 	int gap_score = -2;
 	int match_score = 5;
@@ -147,15 +145,16 @@ int main(int argc, char* argv[])
 			//cigar ulozit do aligmentu
 
 			//cout << a->chromosome << "\t" << a->pos << endl;
-			char *genome_pos = genome.BaseIntervalDisc(a->chromosome, a->pos, a->pos + r->seq_len - 1);   //Zde bych přidal ten interval +/- 20? reference genome OK kdyz dam interval +/- 20
-			
-																						  
-			//Smith_Waterman *test = new Smith_Waterman(, , gap_score, match_score, mismatch_score);
-			
-			Read* r2 = r->paired_read;
+			char *reference_genome = genome.BaseIntervalDisc(a->chromosome, (a->pos - rozsah), ((a->pos + r->seq_len - 1) + rozsah));   //Zde bych přidal ten interval +/- 20? reference genome OK kdyz dam interval +/- 20
+									  
+			Smith_Waterman *test = new Smith_Waterman(r->sequence, reference_genome, gap_score, match_score, mismatch_score);
 
-			cout << genome_pos << endl;
+			system("pause");
 
+			Read* r2 = r->paired_read;	
+			Smith_Waterman *test2 = new Smith_Waterman(r2->sequence, reference_genome, gap_score, match_score, mismatch_score);
+
+			system("pause");
 			a_iterator.Next();
 		}
 

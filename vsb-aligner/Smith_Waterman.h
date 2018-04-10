@@ -9,10 +9,8 @@ using namespace std;
 class Smith_Waterman
 {
 private:
-	string a = "";				//Sequence 1
-	string b = "";				//Sequence 2
-	char *aa;					//Sequence 1 in char array
-	char *bb;					//Sequence 2 in char array
+	char *aa;					//Read
+	char *bb;					//Reference genome
 	char *cigar;				//Temporary cigar before final version
 	string cigar_str = "";		//Cigar string computed in Smith_Waterman
 	int gap_score = 0;
@@ -24,14 +22,14 @@ private:
 	int i_max = 0, j_max = 0;	//The row and columbn coordinates of the highest score in matrix. (j is the last position of aligned string)
 
 public:
-	Smith_Waterman(string a, string b, int gap_score, int match_score, int mismatch_score);
+	Smith_Waterman(char* a, char* b, int gap_score, int match_score, int mismatch_score);
 	int CalculateScore(int i, int j);
 	int NextMove(int pos_i, int pos_j);
 	~Smith_Waterman();
 	int get_first_pos();
 	int get_last_pos();
-	string Cigar(char *a);
-	string get_cigar();
+	char* Cigar(char *a);
+	char* get_cigar();
 	int get_matrix_max_score();
 
 };

@@ -19,6 +19,8 @@ public:
 	u_int pos;
 
 	/* Sekce: Martin Kubala*/
+	char* cigar_r1;
+	char* cigar_r2;
 	/*
 		Mapping quality
 		CIGAR string
