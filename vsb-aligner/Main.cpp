@@ -9,17 +9,19 @@
 #include "Needleman_Wunch.h"
 #include "Needleman_Wunch_Old.h"
 #include "Smith_Waterman.h"
+#include "Output.h"
 
 using namespace std;
 
 void PrintUsage()
 {
 	cerr << "Usage:" << endl << endl;
-	cerr << "Aligner -r1 [forward reads] -r2 [reverse reads] -g [genome_file]" << endl << endl;
+	cerr << "Aligner -r1 [forward reads] -r2 [reverse reads] -g [genome_file] -s [SAM_file]" << endl << endl;
 	cerr << "Options:" << endl;
 	cerr << "\t -r1 -forward reads *_R1_* file; Mandatory." << endl;
 	cerr << "\t -r2 -forward reads *_R2_* file; Mandatory." << endl;
 	cerr << "\t -g -input genome; Default: None" << endl;	
+	cerr << "\t -s -output name of SAM file; Default: None" << endl;
 }
 
 void ParseArguments(int argc, char* argv[], ProgInfo* prog_info)
@@ -34,7 +36,10 @@ void ParseArguments(int argc, char* argv[], ProgInfo* prog_info)
 		}
 		else if (strcmp(argv[arg_id], "-g") == 0) {
 			prog_info->genome_path = argv[arg_id + 1];			
-		}		
+		}
+		else if (strcmp(argv[arg_id], "-s") == 0) {
+			prog_info->sam_file = argv[arg_id + 1];
+		}
 		else {
 			cerr << "Unknown option: " << argv[arg_id] << endl;
 			PrintUsage();
@@ -49,7 +54,8 @@ void PrintArgs(ProgInfo* prog_info)
 	cout << "Aligner: vsb-aligner" << endl;
 	cout << "Reads R1: " << prog_info->fq_F << endl;
 	cout << "Reads R2: " << prog_info->fq_R << endl;
-	cout << "Genome: " << prog_info->genome_path << endl << endl;	
+	cout << "Genome: " << prog_info->genome_path << endl;
+	cout << "SAM file: " << prog_info->sam_file << endl << endl;
 }
 
 void Verify(ProgInfo* proginfo)
@@ -66,6 +72,11 @@ void Verify(ProgInfo* proginfo)
 	}
 	else if (proginfo->fq_R == NULL) {
 		cerr << "Reads R2 are missing." << endl;
+		PrintUsage();
+		exit(EXIT_FAILURE);
+	}
+	else if (proginfo->sam_file == NULL) {
+		cerr << "SAM file name missing." << endl;
 		PrintUsage();
 		exit(EXIT_FAILURE);
 	}
@@ -123,6 +134,9 @@ int main(int argc, char* argv[])
 	/*
 	Sekce: Martin Kubala
 	*/
+	Output *output = new Output(prog_info.sam_file);
+	List<GenomeRegion>* genom_out = genome.Chromosomes();
+	output->print_head(genom_out);
 
 	auto start = chrono::high_resolution_clock::now();
 	u_int rozsah = 20; //Rozsah genom zvetsen o n znaku pred a n znaku po genomu pro vetsi presnost urceni pozice genomu.
