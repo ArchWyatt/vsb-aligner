@@ -51,6 +51,7 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 	//Print out of the matrix and fined max score in the matrix
 	cout << "Testing String  : " << this->aa << endl;
 	cout << "Reference String: " << this->bb << endl;
+	/*
 	cout << "Matrix:" << endl;
 	for (int i = 0; i < lena; i++) {
 		for (int j = 0; j < lenb; j++) {
@@ -61,6 +62,7 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 	cout << endl;
 	cout << "Max score in the matrix is " << this->matrix_max << endl;
 	cout << "Matrix max score coordinates is i: " << this->i_max << " j: " << this->j_max << endl;
+	*/
 
 	/*	Traceback
 	diagonal: match/mismatch

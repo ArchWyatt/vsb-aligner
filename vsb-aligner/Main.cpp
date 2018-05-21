@@ -128,8 +128,8 @@ int main(int argc, char* argv[])
 	u_int rozsah = 20; //Rozsah genom zvetsen o n znaku pred a n znaku po genomu pro vetsi presnost urceni pozice genomu.
 
 	int gap_score = -2;
-	int match_score = 5;
-	int mismatch_score = -1;
+	int match_score = 3;
+	int mismatch_score = -3;
 
 	//Needleman_Wunch *test = new Needleman_Wunch(a, b, gap_score, match_score, mismatch_score);
 	//Needleman_Wunch_Old *test = new Needleman_Wunch_Old(a, b, gap_score, match_score, mismatch_score);
@@ -145,19 +145,34 @@ int main(int argc, char* argv[])
 			//cigar ulozit do aligmentu
 
 			//cout << a->chromosome << "\t" << a->pos << endl;
-			char *reference_genome = genome.BaseIntervalDisc(a->chromosome, (a->pos - rozsah), ((a->pos + r->seq_len - 1) + rozsah));   //Zde bych přidal ten interval +/- 20? reference genome OK kdyz dam interval +/- 20
-									  
+			char *reference_genome = genome.BaseIntervalDisc(a->chromosome, (a->pos), ((a->pos + r->seq_len - 1) + rozsah)); //pohrat si s rozsahem na pocatku stringu tak at je to OK									  
 			Smith_Waterman *test = new Smith_Waterman(r->sequence, reference_genome, gap_score, match_score, mismatch_score);
+			a->pos = a->pos + (test->get_first_pos() - 1);
+			a->cigar = test->get_cigar();
+			a->score = test->get_matrix_max_score();
 
-			system("pause");
-
-			Read* r2 = r->paired_read;	
-			Smith_Waterman *test2 = new Smith_Waterman(r2->sequence, reference_genome, gap_score, match_score, mismatch_score);
-
-			system("pause");
 			a_iterator.Next();
 		}
 
+		Read* r2 = r->paired_read;
+
+		ListIterator<Alignment> b_iterator(r2->alignments->First());
+
+		while (b_iterator.Current() != NULL) {
+			Alignment* b = b_iterator.Current()->Value();
+			//cigar ulozit do aligmentu
+
+			//cout << a->chromosome << "\t" << a->pos << endl;
+			char *reference_genome = genome.BaseIntervalDisc(b->chromosome, (b->pos), ((b->pos + r2->seq_len - 1) + rozsah)); //pohrat si s rozsahem na pocatku stringu tak at je to OK
+
+			Smith_Waterman *test2 = new Smith_Waterman(r2->sequence, reference_genome, gap_score, match_score, mismatch_score);
+			b->pos = b->pos + (test2->get_first_pos() - 1);
+			b->cigar = test2->get_cigar();
+			b->score = test2->get_matrix_max_score();
+
+			b_iterator.Next();
+		}
+		
 		iterator.Next();
 	}
 

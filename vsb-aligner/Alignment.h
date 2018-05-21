@@ -19,10 +19,9 @@ public:
 	u_int pos;
 
 	/* Sekce: Martin Kubala*/
-	char* cigar_r1;
-	char* cigar_r2;
+	char* cigar;
+	u_int score;
 	/*
 		Mapping quality
-		CIGAR string
 	*/
 };
