@@ -18,7 +18,7 @@ public:
 	/* pozice zacatku */
 	u_int pos;
 
-	/* Sekce: Martin Kubala*/
+	/* Sekce: Martin Kubala */
 	char* cigar;
 	u_int score;
 	/*

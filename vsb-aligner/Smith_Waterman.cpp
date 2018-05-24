@@ -49,9 +49,9 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 
 
 	//Print out of the matrix and fined max score in the matrix
+	/*
 	cout << "Testing String  : " << this->aa << endl;
 	cout << "Reference String: " << this->bb << endl;
-	/*
 	cout << "Matrix:" << endl;
 	for (int i = 0; i < lena; i++) {
 		for (int j = 0; j < lenb; j++) {
@@ -119,11 +119,11 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 	this->cigar = new char[this->cigar_str.length()];
 	strcpy(this->cigar, this->cigar_str.c_str());
 	this->cigar = Cigar(this->cigar);
-
+	/*
 	cout << "AlignmentA          : " << RetA << endl;
 	cout << "AlignmentB Reference: " << RetB << endl;
 	cout << "Cigar               : " << this->cigar << endl;
-
+	*/
 }
 
 int Smith_Waterman::CalculateScore(int i, int j)

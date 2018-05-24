@@ -128,26 +128,27 @@ int main(int argc, char* argv[])
 	
 	//nacist do pameti ready
 	List<Read>* reads = aligner.Reads();
-	cout << "Zde zacina ma cast" << endl;
-
-	//system("pause");
+	
 	/*
 	Sekce: Martin Kubala
 	*/
+
+	cout << "Martin Kubala - Part" << endl;
+
+	//SAM file header
 	Output *output = new Output(prog_info.sam_file);
 	List<GenomeRegion>* genom_out = genome.Chromosomes();
 	output->print_head(genom_out);
+	output->print_program_info(prog_info.options->ID, prog_info.options->PN, prog_info.options->VN, prog_info.options->T, prog_info.fq_F, prog_info.fq_R, prog_info.genome_path);
 
 	auto start = chrono::high_resolution_clock::now();
 	u_int rozsah = 20; //Rozsah genom zvetsen o n znaku pred a n znaku po genomu pro vetsi presnost urceni pozice genomu.
 
-	int gap_score = -2;
-	int match_score = 3;
-	int mismatch_score = -3;
-
 	//Needleman_Wunch *test = new Needleman_Wunch(a, b, gap_score, match_score, mismatch_score);
 	//Needleman_Wunch_Old *test = new Needleman_Wunch_Old(a, b, gap_score, match_score, mismatch_score);
 	
+	cout << "Computing part" << endl;
+
 	ListIterator<Read> iterator(reads->First());
 	while (iterator.Current() != NULL){
 		Read* r = iterator.Current()->Value();
@@ -156,11 +157,8 @@ int main(int argc, char* argv[])
 
 		while(a_iterator.Current() != NULL){
 			Alignment* a = a_iterator.Current()->Value();
-			//cigar ulozit do aligmentu
-
-			//cout << a->chromosome << "\t" << a->pos << endl;
-			char *reference_genome = genome.BaseIntervalDisc(a->chromosome, (a->pos), ((a->pos + r->seq_len - 1) + rozsah)); //pohrat si s rozsahem na pocatku stringu tak at je to OK									  
-			Smith_Waterman *test = new Smith_Waterman(r->sequence, reference_genome, gap_score, match_score, mismatch_score);
+			char *reference_genome = genome.BaseIntervalDisc(a->chromosome, (a->pos), ((a->pos + r->seq_len - 1) + rozsah));									  
+			Smith_Waterman *test = new Smith_Waterman(r->sequence, reference_genome, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
 			a->pos = a->pos + (test->get_first_pos() - 1);
 			a->cigar = test->get_cigar();
 			a->score = test->get_matrix_max_score();
@@ -174,12 +172,8 @@ int main(int argc, char* argv[])
 
 		while (b_iterator.Current() != NULL) {
 			Alignment* b = b_iterator.Current()->Value();
-			//cigar ulozit do aligmentu
-
-			//cout << a->chromosome << "\t" << a->pos << endl;
-			char *reference_genome = genome.BaseIntervalDisc(b->chromosome, (b->pos), ((b->pos + r2->seq_len - 1) + rozsah)); //pohrat si s rozsahem na pocatku stringu tak at je to OK
-
-			Smith_Waterman *test2 = new Smith_Waterman(r2->sequence, reference_genome, gap_score, match_score, mismatch_score);
+			char *reference_genome = genome.BaseIntervalDisc(b->chromosome, (b->pos), ((b->pos + r2->seq_len - 1) + rozsah));
+			Smith_Waterman *test2 = new Smith_Waterman(r2->sequence, reference_genome, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
 			b->pos = b->pos + (test2->get_first_pos() - 1);
 			b->cigar = test2->get_cigar();
 			b->score = test2->get_matrix_max_score();
@@ -189,6 +183,8 @@ int main(int argc, char* argv[])
 		
 		iterator.Next();
 	}
+	cout << "SAM output part" << endl;
+	output->print_output_data(reads, prog_info.options->T);
 
 	auto elapsed = chrono::high_resolution_clock::now() - start;
 	long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();

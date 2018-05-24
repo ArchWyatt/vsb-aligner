@@ -31,11 +31,28 @@ class ProgOptions
 {
 public:
 	ProgOptions() {
-		/* Aligner setup - DEFAULTS*/		
+		/* Aligner setup - DEFAULTS*/
+		/* Sekce: Martin Kubala */
+		ID = "vsb";
+		PN = "vsb-aligner";
+		VN = "0.1";
+		T = 20;
+
+		//Smith Waterman score
+		gap_score = -2;
+		match_score = 3;
+		mismatch_score = -3;
 	};
 
 	~ProgOptions() {
 	};	
+	char* ID; // Program ID
+	char* PN; // Program name
+	char* VN; // program version
+	int T; //Throw away readds with score less then specified number
+	int gap_score;
+	int match_score;
+	int mismatch_score;
 };
 
 class ProgInfo
