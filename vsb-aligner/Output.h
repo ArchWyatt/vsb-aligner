@@ -2,6 +2,8 @@
 #include <fstream>
 #include <cstdio>
 #include <iostream>
+#include <cstring>
+#include <string>
 
 #include "Alignment.h"
 #include "Definitions.h"
@@ -44,58 +46,138 @@ public:
 		while (iterator.Current() != NULL) {
 			Read* r = iterator.Current()->Value();
 			ListIterator<Alignment> a_iterator(r->alignments->First());
-			while (a_iterator.Current() != NULL) {
-				Alignment* a = a_iterator.Current()->Value();
-				if ((a->score) > T) {
-					this->ofs << r->name << "\t";
-					this->ofs << "FLAG" << "\t";
-					this->ofs << a->chromosome << "\t";
-					this->ofs << a->pos << "\t";
-					this->ofs << "MAPQ" << "\t";
-					this->ofs << a->cigar << "\t";
-					if (r->name == r->paired_read->name) {
-						this->ofs << "=" << "\t";
+
+			//Version only with paired read - for this work all of the reads is in the pair
+			if (r->paired_read != NULL) {
+				int temp = 0;
+				Read* r2 = r->paired_read;
+				ListIterator<Alignment> b_iterator(r2->alignments->First());
+
+				//while (a_iterator.Current() != NULL && b_iterator.Current() != NULL) {
+				while (a_iterator.Current() != NULL) {
+					Alignment* a = a_iterator.Current()->Value();
+					//Alignment* b = b_iterator.Current()->Value();
+					if ((a->score) > T) {
+						this->ofs << r->name << "\t";
+						this->ofs << "FLAG" << "\t";
+						this->ofs << a->chromosome << "\t";
+						this->ofs << a->pos << "\t";
+						this->ofs << "MAPQ" << "\t";
+						this->ofs << a->cigar << "\t";
+						string x1 = r->name;
+						string x2 = r->paired_read->name;
+						if (x1 == x2) {
+							this->ofs << "=" << "\t";
+						}
+						else {
+							this->ofs << "*" << "\t";
+						}
+						/*
+						this->ofs << b->pos << "\t";
+						if (b->pos >= a->pos) {
+							temp = b->pos - a->pos;
+							temp += b->cigar_length;
+						}
+						else {
+							temp = a->pos - b->pos;
+							temp += a->cigar_length;
+						}
+						this->ofs << temp << "\t";
+						*/
+						
+						if (b_iterator.Current() != NULL) {
+							Alignment* b = b_iterator.Current()->Value();
+							this->ofs << b->pos << "\t";
+							if (b->pos >= a->pos) {
+								temp = b->pos - a->pos;
+								temp += b->cigar_length;
+							}
+							else {
+								temp = a->pos - b->pos;
+								temp += a->cigar_length;
+							}
+							this->ofs << temp << "\t";
+							b_iterator.Next();
+						}
+						else {
+							this->ofs << "N/A" << "\t";
+							this->ofs << "N/A" << "\t";
+						}
+						
+						this->ofs << r->sequence << "\t";
+						this->ofs << r->quality << "\t";
+						this->ofs << "\n";
+						temp = 0;
 					}
-					else {
-						this->ofs << "FAIL" << "\t";
-					}
-					this->ofs << "RNEXT" << "\t";
-					this->ofs << "TLEN" << "\t";
-					this->ofs << r->sequence << "\t";
-					this->ofs << r->quality << "\t";
-					this->ofs << "\n";
+					a_iterator.Next();
+					//b_iterator.Next();
 				}
-				a_iterator.Next();
-			}
 
-			Read* r2 = r->paired_read;
+				a_iterator = r->alignments->First();
+				b_iterator = r2->alignments->First();
+				//while (a_iterator.Current() != NULL && b_iterator.Current() != NULL) {
+				while (b_iterator.Current() != NULL) {
+					Alignment* b = b_iterator.Current()->Value();
+					//Alignment* a = a_iterator.Current()->Value();
+					if ((b->score) > T) {
+						this->ofs << r2->name << "\t";
+						this->ofs << "FLAG" << "\t";
+						this->ofs << b->chromosome << "\t";
+						this->ofs << b->pos << "\t";
+						this->ofs << "MAPQ" << "\t";
+						this->ofs << b->cigar << "\t";
+						string x1 = r2->name;
+						string x2 = r2->paired_read->name;
+						if (x1 == x2) {
+							this->ofs << "=" << "\t";
+						}
+						else {
+							this->ofs << "*" << "\t";
+						}
+						/*
+						this->ofs << a->pos << "\t";
+						if (a->pos >= b->pos) {
+							temp = a->pos - b->pos;
+							temp += a->cigar_length;
 
-			ListIterator<Alignment> b_iterator(r2->alignments->First());
+						}
+						else {
+							temp = b->pos - a->pos;
+							temp += b->cigar_length;
+						}
+						this->ofs << -temp << "\t";
+						*/
 
-			while (b_iterator.Current() != NULL) {
-				Alignment* b = b_iterator.Current()->Value();
-				if ((b->score) > T) {
-					this->ofs << r2->name << "\t";
-					this->ofs << "FLAG" << "\t";
-					this->ofs << b->chromosome << "\t";
-					this->ofs << b->pos << "\t";
-					this->ofs << "MAPQ" << "\t";
-					this->ofs << b->cigar << "\t";
-					if (r2->name == r2->paired_read->name) {
-						this->ofs << "=" << "\t";
+						if (a_iterator.Current() != NULL) {
+							Alignment* a = a_iterator.Current()->Value();
+							this->ofs << a->pos << "\t";
+							if (a->pos >= b->pos) {
+								temp = a->pos - b->pos;
+								temp += a->cigar_length;
+
+							}
+							else {
+								temp = b->pos - a->pos;
+								temp += b->cigar_length;
+							}
+							this->ofs << -temp << "\t";
+							a_iterator.Next();
+						}
+						else {
+							this->ofs << "N/A" << "\t";
+							this->ofs << "N/A" << "\t";
+						}
+						this->ofs << r2->sequence << "\t";
+						this->ofs << r2->quality << "\t";
+						this->ofs << "\n";
+						temp = 0;
 					}
-					else {
-						this->ofs << "FAIL" << "\t";
-					}
-					this->ofs << "RNEXT" << "\t";
-					this->ofs << "TLEN" << "\t";
-					this->ofs << r2->sequence << "\t";
-					this->ofs << r2->quality << "\t";
-					this->ofs << "\n";
+					b_iterator.Next();
+					//a_iterator.Next();
 				}
-				b_iterator.Next();
-			}
 
+			}
+			
 			iterator.Next();
 		}
 		this->ofs.close();

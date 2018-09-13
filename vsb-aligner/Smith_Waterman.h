@@ -13,6 +13,7 @@ private:
 	char *bb;					//Reference genome
 	char *cigar;				//Temporary cigar before final version
 	string cigar_str = "";		//Cigar string computed in Smith_Waterman
+	int cigar_length;
 	int gap_score = 0;
 	int match_score = 0;
 	int mismatch_score = 0;
@@ -30,6 +31,7 @@ public:
 	int get_last_pos();
 	char* Cigar(char *a);
 	char* get_cigar();
+	int get_cigar_length();
 	int get_matrix_max_score();
 
 };

@@ -36,12 +36,14 @@ public:
 		ID = "vsb";
 		PN = "vsb-aligner";
 		VN = "0.1";
-		T = 20;
+		T = 0;
 
 		//Smith Waterman score
 		gap_score = -2;
 		match_score = 3;
 		mismatch_score = -3;
+
+		rozsah = 20; //Rozsah genom zvetsen o n znaku pred a n znaku za genomem pro vetsi presnost urceni pozice genomu.
 	};
 
 	~ProgOptions() {
@@ -53,6 +55,7 @@ public:
 	int gap_score;
 	int match_score;
 	int mismatch_score;
+	u_int rozsah;
 };
 
 class ProgInfo

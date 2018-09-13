@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Definitions.h"
 
@@ -20,7 +20,10 @@ public:
 
 	/* Sekce: Martin Kubala */
 	char* cigar;
+	u_int cigar_length;
 	u_int score;
+	/* proměnná pro output, v případě, že stejný aligment s vyšším score byl už zapsán, tak zde bude nastavena hodnota na false a už nebude dále porovnáván */
+	bool available;
 	/*
 		Mapping quality
 	*/

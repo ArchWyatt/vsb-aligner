@@ -196,6 +196,7 @@ char* Smith_Waterman::Cigar(char *a) {
 	for (int i = 0; i < strlen(a); i++) {
 		if (a[i] == 'M') {
 			M += 1;
+			this->cigar_length += 1;
 			if (I > 0) {
 				test += to_string(I);
 				test += 'I';
@@ -209,6 +210,7 @@ char* Smith_Waterman::Cigar(char *a) {
 		}
 		else if (a[i] == 'I') {
 			I += 1;
+			this->cigar_length += 1;
 			if (M > 0) {
 				test += to_string(M);
 				test += 'M';
@@ -222,6 +224,7 @@ char* Smith_Waterman::Cigar(char *a) {
 		}
 		else if (a[i] == 'D') {
 			D += 1;
+			this->cigar_length += 1;
 			if (M > 0) {
 				test += to_string(M);
 				test += 'M';
@@ -267,6 +270,10 @@ int Smith_Waterman::get_last_pos() {
 
 char* Smith_Waterman::get_cigar() {
 	return this->cigar;
+}
+
+int Smith_Waterman::get_cigar_length() {
+	return this->cigar_length;
 }
 
 int Smith_Waterman::get_matrix_max_score() {
