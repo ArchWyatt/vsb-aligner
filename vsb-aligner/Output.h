@@ -58,16 +58,17 @@ public:
 				while (a_iterator.Current() != NULL) {
 					Alignment* a = a_iterator.Current()->Value();
 					//Alignment* b = b_iterator.Current()->Value();
-
+					/*
 					//Start of the SCORE control to find best match or equal matches.
 					if (a->available == true) {
 						this->score_MAX = a->score;
-						/*
+
 						Here is the compare with all alignments, rules below
 						- Compare this alignment with all Read & paired read alignments.
 						- Variable score_MAX, will store actual biggest score.
 						- If compared alignment will have lesser score than score_MAX, variable available will be set to false
-						*/
+
+						
 						ListIterator<Read> iterator2(reads->First());
 						while (iterator2.Current() != NULL) {
 							Read* rc = iterator2.Current()->Value();
@@ -75,10 +76,20 @@ public:
 							while (a_iterator_compare.Current() != NULL) {
 								Alignment* a2 = a_iterator_compare.Current()->Value();
 								//Start porovnani score
-								if () {
-
+								string x1 = r->sequence;
+								string x2 = rc->sequence;
+								if (x1 == x2) {
+									if (a2->score < this->score_MAX) { //If score is lesser then MAX?score, set available to false
+										a2->available = false;
+									}
+									else if (a2->score == this->score_MAX) {
+										//Nothing will happen
+									}
+									else {
+										this->score_MAX = a2->score;
+										a->available = false;
+									}
 								}
-
 								//Konec porovnani score
 								a_iterator_compare.Next();
 							}
@@ -88,17 +99,28 @@ public:
 							while (b_iterator_compare.Current() != NULL) {
 								Alignment* b2 = b_iterator_compare.Current()->Value();
 								//Start porovnani score
-								if () {
-
+								string x1 = r->sequence;
+								string x2 = rc->sequence;
+								if (x1 == x2) {
+									if (b2->score < this->score_MAX) { //If score is lesser then MAX?score, set available to false
+										b2->available = false;
+									}
+									else if (b2->score == this->score_MAX) {
+										//Nothing will happen
+									}
+									else {
+										this->score_MAX = b2->score;
+										a->available = false;
+									}
 								}
 								//Konec porovnani score
-
+								
 								b_iterator_compare.Next();
 							}
 						}
 					}
 					//End of the control
-
+					*/
 					if ((a->score > T) && (a->available == true)) {
 						this->ofs << r->name << "\t";
 						this->ofs << "FLAG" << "\t";
@@ -162,7 +184,69 @@ public:
 				while (b_iterator.Current() != NULL) {
 					Alignment* b = b_iterator.Current()->Value();
 					//Alignment* a = a_iterator.Current()->Value();
-					if ((b->score) > T) {
+					/*
+					//Start of the SCORE control to find best match or equal matches.
+					if (b->available == true) {
+						this->score_MAX = b->score;
+
+						Here is the compare with all alignments, rules below
+						- Compare this alignment with all Read & paired read alignments.
+						- Variable score_MAX, will store actual biggest score.
+						- If compared alignment will have lesser score than score_MAX, variable available will be set to false
+
+						ListIterator<Read> iterator2(reads->First());
+						while (iterator2.Current() != NULL) {
+							Read* rc = iterator2.Current()->Value();
+							ListIterator<Alignment> a_iterator_compare(rc->alignments->First());
+							while (a_iterator_compare.Current() != NULL) {
+								Alignment* a2 = a_iterator_compare.Current()->Value();
+								//Start porovnani score
+								string x1 = r->sequence;
+								string x2 = rc->sequence;
+								if (x1 == x2) {
+									if (a2->score < this->score_MAX) { //If score is lesser then MAX?score, set available to false
+										a2->available = false;
+									}
+									else if (a2->score == this->score_MAX) {
+										//Nothing will happen
+									}
+									else {
+										this->score_MAX = a2->score;
+										b->available = false;
+									}
+								}
+								//Konec porovnani score
+								a_iterator_compare.Next();
+							}
+
+							Read* rc2 = rc->paired_read;
+							ListIterator<Alignment> b_iterator_compare(rc2->alignments->First());
+							while (b_iterator_compare.Current() != NULL) {
+								Alignment* b2 = b_iterator_compare.Current()->Value();
+								//Start porovnani score
+								string x1 = r->sequence;
+								string x2 = rc->sequence;
+								if (x1 == x2) {
+									if (b2->score < this->score_MAX) { //If score is lesser then MAX?score, set available to false
+										b2->available = false;
+									}
+									else if (b2->score == this->score_MAX) {
+										//Nothing will happen
+									}
+									else {
+										this->score_MAX = b2->score;
+										b->available = false;
+									}
+								}
+								//Konec porovnani score
+
+								b_iterator_compare.Next();
+							}
+						}
+					}
+					//End of the control
+				*/
+					if ((b->score > T) && (b->available == true)) {
 						this->ofs << r2->name << "\t";
 						this->ofs << "FLAG" << "\t";
 						this->ofs << b->chromosome << "\t";
