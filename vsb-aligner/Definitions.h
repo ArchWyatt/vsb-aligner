@@ -32,7 +32,7 @@ class ProgOptions
 public:
 	ProgOptions() {
 		/* Aligner setup - DEFAULTS*/
-		/* Sekce: Martin Kubala */
+		/* Section: Martin Kubala */
 		ID = "vsb";
 		PN = "vsb-aligner";
 		VN = "0.1";
@@ -43,7 +43,8 @@ public:
 		match_score = 3;
 		mismatch_score = -3;
 
-		rozsah = 20; //Rozsah genom zvetsen o n znaku pred a n znaku za genomem pro vetsi presnost urceni pozice genomu.
+		range_prefix = 0;
+		range_suffix = 0; 
 	};
 
 	~ProgOptions() {
@@ -55,7 +56,8 @@ public:
 	int gap_score;
 	int match_score;
 	int mismatch_score;
-	u_int rozsah;
+	u_int range_prefix;//Reference genom prefix n number of characters what will be included in calculation.
+	u_int range_suffix;//Reference genom suffix n number of characters what will be included in calculation.
 };
 
 class ProgInfo

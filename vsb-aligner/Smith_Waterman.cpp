@@ -3,7 +3,6 @@
 
 Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score, int mismatch_score)
 {
-
 	this->gap_score = gap_score;
 	this->match_score = match_score;
 	this->mismatch_score = mismatch_score;
@@ -14,7 +13,7 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 	int lena = strlen(a) + 1; // Pomocná promenná pro ScoringMatrix lena - read
 	int lenb = strlen(b) + 1; // Pomocná promenná pro ScoringMatrix lenb - reference genome
 
-							  // Scoring Matrix Inicialization
+	// Scoring Matrix Inicialization
 	this->ScoringMatrix = new int *[lena];
 	for (int i = 0; i < lena; i++) {
 		this->ScoringMatrix[i] = new int[lenb];
@@ -46,23 +45,6 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 			this->ScoringMatrix[i][j] = score;
 		}
 	}
-
-
-	//Print out of the matrix and fined max score in the matrix
-	/*
-	cout << "Testing String  : " << this->aa << endl;
-	cout << "Reference String: " << this->bb << endl;
-	cout << "Matrix:" << endl;
-	for (int i = 0; i < lena; i++) {
-		for (int j = 0; j < lenb; j++) {
-			cout << right << setw(4) << ScoringMatrix[i][j] << " ";
-		}
-		cout << endl;
-	}
-	cout << endl;
-	cout << "Max score in the matrix is " << this->matrix_max << endl;
-	cout << "Matrix max score coordinates is i: " << this->i_max << " j: " << this->j_max << endl;
-	*/
 
 	/*	Traceback
 	diagonal: match/mismatch
@@ -119,11 +101,6 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 	this->cigar = new char[this->cigar_str.length()];
 	strcpy(this->cigar, this->cigar_str.c_str());
 	this->cigar = Cigar(this->cigar);
-	/*
-	cout << "AlignmentA          : " << RetA << endl;
-	cout << "AlignmentB Reference: " << RetB << endl;
-	cout << "Cigar               : " << this->cigar << endl;
-	*/
 }
 
 int Smith_Waterman::CalculateScore(int i, int j)

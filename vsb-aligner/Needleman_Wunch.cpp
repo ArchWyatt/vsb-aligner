@@ -1,29 +1,23 @@
 #pragma warning(disable:4996) //memcpy
 #include "Needleman_Wunch.h"
 
-Needleman_Wunch::Needleman_Wunch(string a, string b, int gap_score, int match_score, int mismatch_score)
+Needleman_Wunch::Needleman_Wunch(char* a, char* b, int gap_score, int match_score, int mismatch_score)
 {
-	this->a = a;
-	this->b = b;
 	this->gap_score = gap_score;
 	this->match_score = match_score;
 	this->mismatch_score = mismatch_score;
-	int **ScoringMatrix;
 
-	int lena = this->a.length() + 1; // Pomocná promìnná pro ScoringMatrix lena
-	int lenb = this->b.length() + 1; // Pomocná promìnná pro ScoringMatrix lenb
+	this->aa = a;
+	this->bb = b;
 
-	char *aa = new char[this->a.length()];
-	strcpy(aa, this->a.c_str());
-	char *bb = new char[this->b.length()];
-	strcpy(bb, this->b.c_str());
+	int lena = strlen(a) + 1; // Pomocná promenná pro ScoringMatrix lena - read
+	int lenb = strlen(b) + 1; // Pomocná promenná pro ScoringMatrix lenb - reference genome
 
 	// Scoring Matrix Inicialization
-	ScoringMatrix = new int *[lena];
+	this->ScoringMatrix = new int *[lena];
 	for (int i = 0; i < lena; i++) {
-		ScoringMatrix[i] = new int[lenb];
+		this->ScoringMatrix[i] = new int[lenb];
 	}
-	ScoringMatrix[0][0] = 0;
 	
 	// Fill first row and first column with default score
 	for (int i = 1; i < lena; i++) {
@@ -35,56 +29,34 @@ Needleman_Wunch::Needleman_Wunch(string a, string b, int gap_score, int match_sc
 	}
 
 
-	// Fill Matrix
+	/* Fill Matrix
+
+	*/
 	for (int i = 1; i < lena; i++) {
 		for (int j = 1; j < lenb; j++) {
-			//int score = (a[i - 1] == b[j - 1]) ? match_score : mismatch_score;
 			int score = 0;
-			if (aa[i - 1] == bb[j - 1]) {
-				score = this->match_score;
+			score = CalculateScore(i, j);
+			if (score > this->matrix_max)
+			{
+				this->matrix_max = score;
+				this->i_max = i;
+				this->j_max = j;
 			}
-			else {
-				score = this->mismatch_score;
-			}
-			//Max function replacement.
-			int helper = 0;
-			if ((ScoringMatrix[i - 1][j] + this->gap_score) >= (ScoringMatrix[i][j - 1] + this->gap_score)) {
-				helper = (ScoringMatrix[i - 1][j] + this->gap_score);
-			}
-			else {
-				helper = (ScoringMatrix[i][j - 1] + this->gap_score);
-			}
-			if ((ScoringMatrix[i - 1][j - 1] + score) >= helper) {
-				ScoringMatrix[i][j] = (ScoringMatrix[i - 1][j - 1] + score);
-			}
-			else {
-				ScoringMatrix[i][j] = helper;
-			}
-
-			//ScoringMatrix[i][j] = max(ScoringMatrix[i - 1][j - 1] + score, max(ScoringMatrix[i - 1][j] + this->gap_score, ScoringMatrix[i][j - 1] + this->gap_score));
+			this->ScoringMatrix[i][j] = score;
 		}
 	}
 
+	/*	Traceback
+	diagonal: match/mismatch
+	up:       gap in sequence 1
+	left:     gap in sequence 2
+	*/
+	string RetA, RetB;
+	stack<char> SA, SB, SCigar;
 
-	//Print out of the matrix
-	cout << "Testing String  : " << aa << endl;
-	cout << "Reference String: " << bb << endl;
-	cout << "Matrix:" << endl;
-	for (int i = 0; i < lena; i++) {
-		for (int j = 0; j < lenb; j++) {
-			cout << right << setw(4) << ScoringMatrix[i][j] << " ";
-		}
-		cout << endl;
-	}
-	cout << endl;
-
-
-	//Traceback
-	string RetA, RetB, RetCigar;
-	char *xA, *xB, *xCigar;
-	stack<char> SA, SB, CIGAR;
-	int lenc = this->a.length();
-	int lend = this->b.length();
+	//char *xA, *xB, *xCigar;
+	int lenc = strlen(a);
+	int lend = strlen(b);
 
 	while (lenc != 0 || lend != 0)
 	{
@@ -92,12 +64,14 @@ Needleman_Wunch::Needleman_Wunch(string a, string b, int gap_score, int match_sc
 		{
 			SA.push('-');
 			SB.push(bb[lend - 1]);
+			SCigar.push('D');
 			lend--;
 		}
 		else if (lend == 0)
 		{
 			SA.push(aa[lenc - 1]);
 			SB.push('-');
+			SCigar.push('I');
 			lenc--;
 		}
 		else
@@ -113,47 +87,168 @@ Needleman_Wunch::Needleman_Wunch(string a, string b, int gap_score, int match_sc
 			{
 				SA.push(aa[lenc - 1]);
 				SB.push(bb[lend - 1]);
+				SCigar.push('M');
 				lenc--; lend--;
 			}
 			else if (ScoringMatrix[lenc - 1][lend] > ScoringMatrix[lenc][lend - 1])
 			{
 				SA.push(aa[lenc - 1]);
 				SB.push('-');
+				SCigar.push('I');
 				lenc--;
 			}
 			else
 			{
 				SA.push('-');
 				SB.push(bb[lend - 1]);
+				SCigar.push('D');
 				lend--;
 			}
 		}
 	}
 
-
-	xA = new char[SA.size()];
-	xB = new char[SB.size()];
-
 	while (!SA.empty())
 	{
 		RetA += SA.top();
 		RetB += SB.top();
+		this->cigar_str += SCigar.top();
 		SA.pop();
 		SB.pop();
+		SCigar.pop();
 	}
 
-	strcpy(xA, RetA.c_str());
-	strcpy(xB, RetB.c_str());
-
-	cout << "AlignmentA: " << RetA<< endl;
-	cout << "AlignmentB: " << RetB << endl;
+	//CIGAR String computing
+	this->cigar = new char[this->cigar_str.length()];
+	strcpy(this->cigar, this->cigar_str.c_str());
+	this->cigar = Cigar(this->cigar);
 }
+
+int Needleman_Wunch::CalculateScore(int i, int j)
+{
+	int max = 0;
+	int similarity;
+	if (this->aa[i - 1] == this->bb[j - 1]) {
+		similarity = this->match_score;
+	}
+	else {
+		similarity = this->mismatch_score;
+	}
+
+
+	if ((ScoringMatrix[i - 1][j] + this->gap_score) >= (ScoringMatrix[i][j - 1] + this->gap_score)) {
+		max = (ScoringMatrix[i - 1][j] + this->gap_score);
+	}
+	else {
+		max = (ScoringMatrix[i][j - 1] + this->gap_score);
+	}
+	if ((ScoringMatrix[i - 1][j - 1] + similarity) >= max) {
+		return (ScoringMatrix[i - 1][j - 1] + similarity);
+	}
+	else {
+		return max;
+	}
+}
+
+char* Needleman_Wunch::Cigar(char *a) {
+	char* out;
+	string test = "";
+	int M = 0;
+	int I = 0;
+	int D = 0;
+	for (int i = 0; i < strlen(a); i++) {
+		if (a[i] == 'M') {
+			M += 1;
+			this->cigar_length += 1;
+			if (I > 0) {
+				test += to_string(I);
+				test += 'I';
+				I = 0;
+			}
+			else if (D > 0) {
+				test += to_string(D);
+				test += 'D';
+				D = 0;
+			}
+		}
+		else if (a[i] == 'I') {
+			I += 1;
+			this->cigar_length += 1;
+			if (M > 0) {
+				test += to_string(M);
+				test += 'M';
+				M = 0;
+			}
+			else if (D > 0) {
+				test += to_string(D);
+				test += 'D';
+				D = 0;
+			}
+		}
+		else if (a[i] == 'D') {
+			D += 1;
+			this->cigar_length += 1;
+			if (M > 0) {
+				test += to_string(M);
+				test += 'M';
+				M = 0;
+			}
+			else if (I > 0) {
+				test += to_string(I);
+				test += 'I';
+				I = 0;
+			}
+		}
+	}
+
+	if (M > 0) {
+		test += to_string(M);
+		test += 'M';
+		M = 0;
+	}
+	else if (I > 0) {
+		test += to_string(I);
+		test += 'I';
+		I = 0;
+	}
+	else if (D > 0) {
+		test += to_string(D);
+		test += 'D';
+		D = 0;
+	}
+
+	out = new char[test.length()];
+	strcpy(out, test.c_str());
+
+	return out;
+}
+
+int Needleman_Wunch::get_first_pos() {
+	return this->j_min;
+}
+
+int Needleman_Wunch::get_last_pos() {
+	return this->j_max;
+}
+
+char* Needleman_Wunch::get_cigar() {
+	return this->cigar;
+}
+
+int Needleman_Wunch::get_cigar_length() {
+	return this->cigar_length;
+}
+
+int Needleman_Wunch::get_matrix_max_score() {
+	return this->matrix_max;
+}
+
 
 Needleman_Wunch::~Needleman_Wunch()
 {
-	this->a = "";
-	this->b = "";
 	this->gap_score = 0;
 	this->match_score = 0;
 	this->mismatch_score = 0;
+	this->ScoringMatrix = 0;
+	this->matrix_max = 0;
+	this->i_max = 0, j_max = 0;
 }
