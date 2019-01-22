@@ -188,7 +188,10 @@ int main(int argc, char* argv[])
 		iterator.Next();
 	}
 	cout << "SAM output part" << endl;
-	output->print_output_data(reads, prog_info.options->T);
+	//output->print_output_data(reads, prog_info.options->T);
+	output->output_prepare(reads, prog_info.options->T);
+	cout << "Printing into file" << endl;
+	output->print_output_data();
 
 	auto elapsed = chrono::high_resolution_clock::now() - start;
 	long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();

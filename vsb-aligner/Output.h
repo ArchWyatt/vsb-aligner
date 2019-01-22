@@ -6,6 +6,7 @@
 #include <string>
 
 #include "Alignment.h"
+#include "Alignment_output.h"
 #include "Definitions.h"
 #include "Genome.h"
 #include "GenomeRegion.h"
@@ -19,6 +20,7 @@ private:
 	ofstream ofs;
 	char* sam_file = NULL;
 	int score_MAX = 0;
+	List<Alignment_output>* out_alignments = new List<Alignment_output>();
 public:
 	Output(char* output_file){
 		this->sam_file = output_file;
@@ -41,7 +43,157 @@ public:
 		this->ofs.close();
 	}
 
-	void print_output_data(List<Read>* reads, int T) {
+	void output_prepare(List<Read>* reads, int T) {
+		u_int id = 0;
+		ListIterator<Read> iterator(reads->First());
+		while (iterator.Current() != NULL) {
+			Read* r = iterator.Current()->Value();
+			ListIterator<Alignment> a_iterator(r->alignments->First());
+			if (r->paired_read != NULL) {
+				int temp = 0; // 
+				Read* r2 = r->paired_read;
+				ListIterator<Alignment> b_iterator(r2->alignments->First());
+				while (a_iterator.Current() != NULL) {
+					Alignment* a = a_iterator.Current()->Value();
+					if ((a->score > T) && (a->available == true)) {
+						u_int FLAG = 0;
+						u_int MAPQ = 0;
+						char* RNEXT;
+						u_int PNEXT = 0;
+						u_int TLEN = 0;
+						/*
+						RNEXT couting part
+						*/
+						string x1 = r->name;
+						string x2 = r->paired_read->name;
+						if (x1 == x2) {
+							RNEXT = "=";
+						}
+						else {
+							RNEXT = "*";
+						}
+						/*
+						PNEXT, TLEN couting part
+						*/
+						if (b_iterator.Current() != NULL) {
+							Alignment* b = b_iterator.Current()->Value();
+							PNEXT = b->pos;
+							if (b->pos >= a->pos) {
+								temp = b->pos - a->pos;
+								temp += b->cigar_length;
+							}
+							else {
+								temp = a->pos - b->pos;
+								temp += a->cigar_length;
+							}
+							TLEN = temp;
+							b_iterator.Next();
+						}
+						else {
+							PNEXT = 0;
+							TLEN = 0;
+						}
+						temp = 0;
+						/*
+						Store alignment into output list
+						*/
+						this->out_alignments->Append(new Alignment_output(id, r->name, FLAG, a->chromosome, a->pos, MAPQ, a->cigar, RNEXT, PNEXT, TLEN, r->sequence, r->quality, a->score));
+						id++;
+					}
+					a_iterator.Next();
+				}
+
+				a_iterator = r->alignments->First();
+				b_iterator = r2->alignments->First();
+				while (b_iterator.Current() != NULL) {
+					Alignment* b = b_iterator.Current()->Value();
+					if ((b->score > T) && (b->available == true)) {
+						u_int FLAG = 0;
+						u_int MAPQ = 0;
+						char* RNEXT;
+						u_int PNEXT = 0;
+						u_int TLEN = 0;
+						/*
+						RNEXT couting part
+						*/
+						string x1 = r2->name;
+						string x2 = r2->paired_read->name;
+						if (x1 == x2) {
+							RNEXT = "=";
+						}
+						else {
+							RNEXT = "*";
+						}
+						/*
+						PNEXT, TLEN couting part
+						*/
+						if (a_iterator.Current() != NULL) {
+							Alignment* a = a_iterator.Current()->Value();
+							PNEXT = a->pos;
+							if (a->pos >= b->pos) {
+								temp = a->pos - b->pos;
+								temp += a->cigar_length;
+
+							}
+							else {
+								temp = b->pos - a->pos;
+								temp += b->cigar_length;
+							}
+							TLEN = -temp;
+							a_iterator.Next();
+						}
+						else {
+							PNEXT = 0;
+							TLEN = 0;
+						}
+						temp = 0;
+						/*
+						Store alignment into output list
+						*/
+						this->out_alignments->Append(new Alignment_output(id, r2->name, FLAG, b->chromosome, b->pos, MAPQ, b->cigar, RNEXT, PNEXT, TLEN, r2->sequence, r2->quality, b->score));
+						id++;
+					}
+					b_iterator.Next();
+				}
+
+			}
+
+			iterator.Next();
+		}
+	}
+
+	void output_top_score_filtering() {
+		//Zde bude protrizeni vyustupu kde bude mozne vypsat pouze alignmenty s nejvyssim score, pripadne alignmenty ktera budou mit spolecne nejvyssi score.
+		//Vector bude pro alignmenty jenž jsou si rovny, bude se ukladat id prvku v listu a pokud bude prvek vyšší, tak se id použije k zneplatnění těchto alignmentu v samostatném cyklu dokud nebude vektor prázdný, takže while a následně bude porovnávaní nejvyššího alignmentu pokračovat.
+
+	}
+	
+	void print_output_data() {
+		this->ofs.open(this->sam_file, ios::out | ios::app);
+		ListIterator<Alignment_output> iterator(out_alignments->First());
+		while (iterator.Current() != NULL) {
+			Alignment_output* out = iterator.Current()->Value();
+			if (out->available == true) {
+				this->ofs << out->QNAME << "\t";
+				this->ofs << out->FLAG << "\t";
+				this->ofs << out->RNAME << "\t";
+				this->ofs << out->POS << "\t";
+				this->ofs << out->MAPQ << "\t";
+				this->ofs << out->CIGAR << "\t";
+				this->ofs << out->RNEXT << "\t";
+				this->ofs << out->PNEXT << "\t";
+				this->ofs << out->TLEN << "\t";
+				this->ofs << out->SEQ << "\t";
+				this->ofs << out->QUAL << "\t";
+				this->ofs << "\n";
+			}
+			iterator.Next();
+		}
+		this->ofs.close();
+	}
+
+	void print_output_data_old(List<Read>* reads, int T) {
+		//Tady se upravi pouze vypis z upraveneho listu
 		this->ofs.open(this->sam_file, ios::out | ios::app);
 		ListIterator<Read> iterator(reads->First());
 		while (iterator.Current() != NULL) {
