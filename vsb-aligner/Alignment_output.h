@@ -40,7 +40,7 @@ public:
 	char* CIGAR;
 	char* RNEXT;
 	u_int PNEXT;
-	u_int TLEN;
+	int TLEN;
 	char* SEQ;
 	char* QUAL;
 	u_int score;

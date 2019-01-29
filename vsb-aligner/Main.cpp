@@ -10,6 +10,7 @@
 #include "Needleman_Wunch_Old.h"
 #include "Smith_Waterman.h"
 #include "Output.h"
+#include "MAPQ.h"
 
 using namespace std;
 
@@ -162,6 +163,9 @@ int main(int argc, char* argv[])
 			a->cigar_length = test->get_cigar_length();
 			a->score = test->get_matrix_max_score();
 			a->available = true;
+			
+			MAPQ* temp_MAPQ1 = new MAPQ(test->get_mismatch(), r->quality);
+			a->MAPQ = temp_MAPQ1->get_MAPQ();
 
 			a_iterator.Next();
 		}
@@ -181,6 +185,9 @@ int main(int argc, char* argv[])
 			b->cigar_length = test2->get_cigar_length();
 			b->score = test2->get_matrix_max_score();
 			b->available = true;
+
+			MAPQ* temp_MAPQ2 = new MAPQ(test2->get_mismatch(), r2->quality);
+			b->MAPQ = temp_MAPQ2->get_MAPQ();
 
 			b_iterator.Next();
 		}

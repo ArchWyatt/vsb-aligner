@@ -55,9 +55,15 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 	stack<char> SA, SB, SCigar;
 	int pos_i = this->i_max;
 	int pos_j = this->j_max;
+	SA.push(this->aa[pos_i]);
+	SB.push(this->bb[pos_j]);
+	SCigar.push('M');
 	int move = NextMove(pos_i, pos_j);
 	while (move != 0) {
 		if (move == 1) { // Diagonal move
+			if ((this->aa[pos_i - 1]) != (this->bb[pos_j - 1])) {
+				this->mismatch++;
+			}
 			SA.push(this->aa[pos_i - 1]);
 			SB.push(this->bb[pos_j - 1]);
 			SCigar.push('M');
@@ -257,6 +263,9 @@ int Smith_Waterman::get_matrix_max_score() {
 	return this->matrix_max;
 }
 
+int Smith_Waterman::get_mismatch() {
+	return this->mismatch;
+}
 
 Smith_Waterman::~Smith_Waterman()
 {

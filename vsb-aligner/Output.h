@@ -26,6 +26,10 @@ public:
 		this->sam_file = output_file;
 		int file_check = remove(output_file); //If file exists, return code is 0. We have it here to be sure, that file will be deleted.
 	}
+
+	/*
+	Print the head into the txt file
+	*/
 	void print_head(List<GenomeRegion>* gen){
 		ListIterator<GenomeRegion> iterator(gen->First());
 		this->ofs.open(this->sam_file, ios::out);
@@ -37,12 +41,19 @@ public:
 		this->ofs.close();
 	}
 
+	/*
+	Print program info into the txt file
+	*/
 	void print_program_info(char* ID, char* PN, char* VN, int T, char* r1, char* r2, char* genome) {
 		this->ofs.open(this->sam_file, ios::out | ios::app);
 		this->ofs << "@PG ID:" << ID << "\tPN:" << PN << "\tVN:" << VN << "\t-T " << T << "\t" << r1 << "\t" << r2 << "\t" << genome << "\n";
 		this->ofs.close();
 	}
 
+
+	/*
+	Preparing List of alignments output format for better handling 
+	*/
 	void output_prepare(List<Read>* reads, int T) {
 		u_int id = 0;
 		ListIterator<Read> iterator(reads->First());
@@ -57,12 +68,11 @@ public:
 					Alignment* a = a_iterator.Current()->Value();
 					if ((a->score > T) && (a->available == true)) {
 						u_int FLAG = 0;
-						u_int MAPQ = 0;
 						char* RNEXT;
 						u_int PNEXT = 0;
-						u_int TLEN = 0;
+						int TLEN = 0;
 						/*
-						RNEXT couting part
+						RNEXT calculating part
 						*/
 						string x1 = r->name;
 						string x2 = r->paired_read->name;
@@ -73,7 +83,7 @@ public:
 							RNEXT = "*";
 						}
 						/*
-						PNEXT, TLEN couting part
+						PNEXT, TLEN calculating part
 						*/
 						if (b_iterator.Current() != NULL) {
 							Alignment* b = b_iterator.Current()->Value();
@@ -86,7 +96,7 @@ public:
 								temp = a->pos - b->pos;
 								temp += a->cigar_length;
 							}
-							TLEN = temp;
+							TLEN = temp + 1;
 							b_iterator.Next();
 						}
 						else {
@@ -97,7 +107,7 @@ public:
 						/*
 						Store alignment into output list
 						*/
-						this->out_alignments->Append(new Alignment_output(id, r->name, FLAG, a->chromosome, a->pos, MAPQ, a->cigar, RNEXT, PNEXT, TLEN, r->sequence, r->quality, a->score));
+						this->out_alignments->Append(new Alignment_output(id, r->name, FLAG, a->chromosome, a->pos, a->MAPQ, a->cigar, RNEXT, PNEXT, TLEN, r->sequence, r->quality, a->score));
 						id++;
 					}
 					a_iterator.Next();
@@ -109,12 +119,11 @@ public:
 					Alignment* b = b_iterator.Current()->Value();
 					if ((b->score > T) && (b->available == true)) {
 						u_int FLAG = 0;
-						u_int MAPQ = 0;
 						char* RNEXT;
 						u_int PNEXT = 0;
-						u_int TLEN = 0;
+						int TLEN = 0;
 						/*
-						RNEXT couting part
+						RNEXT calculating part
 						*/
 						string x1 = r2->name;
 						string x2 = r2->paired_read->name;
@@ -125,7 +134,7 @@ public:
 							RNEXT = "*";
 						}
 						/*
-						PNEXT, TLEN couting part
+						PNEXT, TLEN calculating part
 						*/
 						if (a_iterator.Current() != NULL) {
 							Alignment* a = a_iterator.Current()->Value();
@@ -139,7 +148,7 @@ public:
 								temp = b->pos - a->pos;
 								temp += b->cigar_length;
 							}
-							TLEN = -temp;
+							TLEN = -temp-1;
 							a_iterator.Next();
 						}
 						else {
@@ -150,7 +159,7 @@ public:
 						/*
 						Store alignment into output list
 						*/
-						this->out_alignments->Append(new Alignment_output(id, r2->name, FLAG, b->chromosome, b->pos, MAPQ, b->cigar, RNEXT, PNEXT, TLEN, r2->sequence, r2->quality, b->score));
+						this->out_alignments->Append(new Alignment_output(id, r2->name, FLAG, b->chromosome, b->pos, b->MAPQ, b->cigar, RNEXT, PNEXT, TLEN, r2->sequence, r2->quality, b->score));
 						id++;
 					}
 					b_iterator.Next();
@@ -162,12 +171,18 @@ public:
 		}
 	}
 
+	/*
+	Filter the alignments by the highes score of the alingments.
+	*/
 	void output_top_score_filtering() {
 		//Zde bude protrizeni vyustupu kde bude mozne vypsat pouze alignmenty s nejvyssim score, pripadne alignmenty ktera budou mit spolecne nejvyssi score.
 		//Vector bude pro alignmenty jenž jsou si rovny, bude se ukladat id prvku v listu a pokud bude prvek vyšší, tak se id použije k zneplatnění těchto alignmentu v samostatném cyklu dokud nebude vektor prázdný, takže while a následně bude porovnávaní nejvyššího alignmentu pokračovat.
 
 	}
 	
+	/*
+	Print alignments data into the file
+	*/
 	void print_output_data() {
 		this->ofs.open(this->sam_file, ios::out | ios::app);
 		ListIterator<Alignment_output> iterator(out_alignments->First());
