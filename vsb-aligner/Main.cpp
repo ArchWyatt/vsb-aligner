@@ -155,8 +155,8 @@ int main(int argc, char* argv[])
 		while(a_iterator.Current() != NULL){
 			Alignment* a = a_iterator.Current()->Value();
 			char *reference_genome = genome.BaseIntervalDisc(a->chromosome, ((a->pos)-(prog_info.options->range_prefix)), ((a->pos + r->seq_len - 1) + prog_info.options->range_suffix));
-			//Smith_Waterman *test = new Smith_Waterman(r->sequence, reference_genome, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
-			Needleman_Wunch *test = new Needleman_Wunch(r->sequence, reference_genome, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
+			Smith_Waterman *test = new Smith_Waterman(r->sequence, reference_genome, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
+			//Needleman_Wunch *test = new Needleman_Wunch(r->sequence, reference_genome, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
 			//Needleman_Wunch_Old *test = new Needleman_Wunch_Old(r->sequence, reference_genome, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
 			a->pos = a->pos + (test->get_first_pos() - 1);
 			a->cigar = test->get_cigar();
@@ -177,8 +177,8 @@ int main(int argc, char* argv[])
 		while (b_iterator.Current() != NULL) {
 			Alignment* b = b_iterator.Current()->Value();
 			char *reference_genome = genome.BaseIntervalDisc(b->chromosome, ((b->pos) - (prog_info.options->range_prefix)), ((b->pos + r2->seq_len - 1) + prog_info.options->range_suffix));
-			//Smith_Waterman *test2 = new Smith_Waterman(r2->sequence, reference_genome, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
-			Needleman_Wunch *test2 = new Needleman_Wunch(r->sequence, reference_genome, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
+			Smith_Waterman *test2 = new Smith_Waterman(r2->sequence, reference_genome, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
+			//Needleman_Wunch *test2 = new Needleman_Wunch(r->sequence, reference_genome, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
 			//Needleman_Wunch_Old *test2 = new Needleman_Wunch_Old(r->sequence, reference_genome, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
 			b->pos = b->pos + (test2->get_first_pos() - 1);
 			b->cigar = test2->get_cigar();
