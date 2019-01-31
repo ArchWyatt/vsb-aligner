@@ -21,6 +21,7 @@ private:
 	int matrix_max = 0;			//The highest score in matrix.
 	int i_min = 0, j_min = 0;	//The row and column coordinates of the lowest score in matrix. (j is the first position of aligned string)
 	int i_max = 0, j_max = 0;	//The row and columbn coordinates of the highest score in matrix. (j is the last position of aligned string)
+	int mismatch = 0;			//Mismatch with reference genom
 
 public:
 	Needleman_Wunch(char* a, char* b, int gap_score, int match_score, int mismatch_score);
@@ -32,4 +33,5 @@ public:
 	char* get_cigar();
 	int get_cigar_length();
 	int get_matrix_max_score();
+	int get_mismatch();
 };

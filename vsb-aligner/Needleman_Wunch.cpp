@@ -57,8 +57,13 @@ Needleman_Wunch::Needleman_Wunch(char* a, char* b, int gap_score, int match_scor
 	//char *xA, *xB, *xCigar;
 	int lenc = strlen(a);
 	int lend = strlen(b);
-
-	while (lenc != 0 || lend != 0)
+	if ((this->aa[lenc]) != (this->bb[lend])) {
+		this->mismatch++;
+	}
+	SA.push(this->aa[lenc]);
+	SB.push(this->bb[lend]);
+	SCigar.push('M');
+	while (lenc != 0 && lend != 0) // Change (lenc != 0 || lend != 0) to (lenc != 0 && lend != 0) to to filter out prefix with Inserts and Deletes.
 	{
 		if (lenc == 0)
 		{
@@ -85,6 +90,9 @@ Needleman_Wunch::Needleman_Wunch(char* a, char* b, int gap_score, int match_scor
 			}
 			if (ScoringMatrix[lenc][lend] == ScoringMatrix[lenc - 1][lend - 1] + score)
 			{
+				if ((this->aa[lenc - 1]) != (this->bb[lend - 1])) {
+					this->mismatch++;
+				}
 				SA.push(aa[lenc - 1]);
 				SB.push(bb[lend - 1]);
 				SCigar.push('M');
@@ -240,6 +248,10 @@ int Needleman_Wunch::get_cigar_length() {
 
 int Needleman_Wunch::get_matrix_max_score() {
 	return this->matrix_max;
+}
+
+int Needleman_Wunch::get_mismatch() {
+	return this->mismatch;
 }
 
 

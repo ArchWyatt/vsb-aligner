@@ -55,6 +55,9 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 	stack<char> SA, SB, SCigar;
 	int pos_i = this->i_max;
 	int pos_j = this->j_max;
+	if ((this->aa[pos_i]) != (this->bb[pos_j])) {
+		this->mismatch++;
+	}
 	SA.push(this->aa[pos_i]);
 	SB.push(this->bb[pos_j]);
 	SCigar.push('M');
