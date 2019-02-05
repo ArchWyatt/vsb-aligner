@@ -197,6 +197,7 @@ int main(int argc, char* argv[])
 	cout << "SAM output part" << endl;
 	//output->print_output_data(reads, prog_info.options->T);
 	output->output_prepare(reads, prog_info.options->T);
+	output->output_top_score_filtering();
 	cout << "Printing into file" << endl;
 	output->print_output_data();
 

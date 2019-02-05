@@ -22,8 +22,12 @@ public:
 	char* cigar;
 	u_int cigar_length;
 	u_int score;
-	/* proměnná pro output, v případě, že stejný aligment s vyšším score byl už zapsán, tak zde bude nastavena hodnota na false a už nebude dále porovnáván */
+	/* Attribute for output, if it is true, alignment will be printed out */
 	bool available;
 	/* Mapping quality	*/
 	u_int MAPQ = 0;
+	/* FLAG	*/
+	u_int FLAG = 0;
+	/* Mark of alignment duplicity, to know, that there is same alignment */
+	bool duplicity = false;
 };
