@@ -167,6 +167,14 @@ int main(int argc, char* argv[])
 			MAPQ* temp_MAPQ1 = new MAPQ(test->get_mismatch(), r->quality);
 			a->MAPQ = temp_MAPQ1->get_MAPQ();
 
+			/*
+			FLAG part 1
+			*/
+			a->FLAG += 1;	// + 0x1 - template having multiple segments in sequencing - This part was done in preprocessed data
+			a->FLAG += 2;	// + 0x2 - each segment properly aligned according to the aligner - This part was done in preprocessed data
+			a->FLAG += 32;	// + 0x20 - SEQ of the next segment in the template being reverse complemented - This part was done in preprocessed data, all reads are paired.
+			a->FLAG += 64;	// + 0x40 - the ﬁrst segment in the template
+
 			a_iterator.Next();
 		}
 
@@ -189,6 +197,14 @@ int main(int argc, char* argv[])
 			MAPQ* temp_MAPQ2 = new MAPQ(test2->get_mismatch(), r2->quality);
 			b->MAPQ = temp_MAPQ2->get_MAPQ();
 
+			/*
+			FLAG part 2
+			*/
+			b->FLAG += 1;	// + 0x1 - template having multiple segments in sequencing - This part was done in preprocessed data
+			b->FLAG += 2;	// + 0x2 - each segment properly aligned according to the aligner - This part was done in preprocessed data
+			b->FLAG += 16;	// + 0x10 - SEQ being reverse complemented - This part was done in preprocessed data, all reads are paired.
+			b->FLAG += 128;	// + 0x80 - the last segment in the template 
+
 			b_iterator.Next();
 		}
 		
@@ -197,7 +213,7 @@ int main(int argc, char* argv[])
 	cout << "SAM output part" << endl;
 	//output->print_output_data(reads, prog_info.options->T);
 	output->output_prepare(reads, prog_info.options->T);
-	output->output_top_score_filtering();
+	//output->output_top_score_filtering();
 	cout << "Printing into file" << endl;
 	output->print_output_data();
 

@@ -67,7 +67,6 @@ public:
 				while (a_iterator.Current() != NULL) {
 					Alignment* a = a_iterator.Current()->Value();
 					if ((a->score > T) && (a->available == true)) {
-						u_int FLAG = 0;
 						char* RNEXT;
 						u_int PNEXT = 0;
 						int TLEN = 0;
@@ -107,7 +106,7 @@ public:
 						/*
 						Store alignment into output list
 						*/
-						this->out_alignments->Append(new Alignment_output(id, r->name, FLAG, a->chromosome, a->pos, a->MAPQ, a->cigar, RNEXT, PNEXT, TLEN, r->sequence, r->quality, a->score));
+						this->out_alignments->Append(new Alignment_output(id, r->name, a->FLAG, a->chromosome, a->pos, a->MAPQ, a->cigar, RNEXT, PNEXT, TLEN, r->sequence, r->quality, a->score));
 						id++;
 					}
 					a_iterator.Next();
@@ -118,7 +117,6 @@ public:
 				while (b_iterator.Current() != NULL) {
 					Alignment* b = b_iterator.Current()->Value();
 					if ((b->score > T) && (b->available == true)) {
-						u_int FLAG = 0;
 						char* RNEXT;
 						u_int PNEXT = 0;
 						int TLEN = 0;
@@ -159,7 +157,7 @@ public:
 						/*
 						Store alignment into output list
 						*/
-						this->out_alignments->Append(new Alignment_output(id, r2->name, FLAG, b->chromosome, b->pos, b->MAPQ, b->cigar, RNEXT, PNEXT, TLEN, r2->sequence, r2->quality, b->score));
+						this->out_alignments->Append(new Alignment_output(id, r2->name, b->FLAG, b->chromosome, b->pos, b->MAPQ, b->cigar, RNEXT, PNEXT, TLEN, r2->sequence, r2->quality, b->score));
 						id++;
 					}
 					b_iterator.Next();

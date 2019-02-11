@@ -29,8 +29,8 @@ Needleman_Wunch::Needleman_Wunch(char* a, char* b, int gap_score, int match_scor
 	}
 
 
-	/* Fill Matrix
-
+	/* 
+	Fill Matrix
 	*/
 	for (int i = 1; i < lena; i++) {
 		for (int j = 1; j < lenb; j++) {
@@ -46,7 +46,8 @@ Needleman_Wunch::Needleman_Wunch(char* a, char* b, int gap_score, int match_scor
 		}
 	}
 
-	/*	Traceback
+	/*
+	Traceback
 	diagonal: match/mismatch
 	up:       gap in sequence 1
 	left:     gap in sequence 2
