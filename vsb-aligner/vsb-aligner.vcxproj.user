@@ -13,7 +13,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerCommandArguments>-r1 7055-JR-17-25ng-A_S7_L001_R1_001.primers_out.paired.fastq -r2 7055-JR-17-25ng-A_S7_L001_R2_001.primers_out.paired.fastq -g "C:\Users\kubalmar\Documents\Visual Studio 2017\Projects\vsb-aligner\vsb-aligner\data\hg38_clear.fa"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-r1 "C:\Users\Marti\Documents\Visual Studio 2017\Projects\vsb-aligner\vsb-aligner\data\7055-JR-17-25ng-A_S7_L001_R1_001.primers_out.paired.fastq" -r2 "C:\Users\Marti\Documents\Visual Studio 2017\Projects\vsb-aligner\vsb-aligner\data\7055-JR-17-25ng-A_S7_L001_R2_001.primers_out.paired.fastq" -g "C:\Users\Marti\Documents\Visual Studio 2017\Projects\vsb-aligner\vsb-aligner\data\hg38_clear.fa" -s "C:\Users\Marti\Documents\Visual Studio 2017\Projects\vsb-aligner\vsb-aligner\data\SAM_output.sam"</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

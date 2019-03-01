@@ -146,6 +146,8 @@ int main(int argc, char* argv[])
 
 	cout << "Computing part" << endl;
 
+	cout << reads->Length() << "\n";
+	int tralatest = 0;
 	ListIterator<Read> iterator(reads->First());
 	while (iterator.Current() != NULL){
 		Read* r = iterator.Current()->Value();
@@ -162,9 +164,8 @@ int main(int argc, char* argv[])
 			a->cigar = test->get_cigar();
 			a->cigar_length = test->get_cigar_length();
 			a->score = test->get_matrix_max_score();
-			a->available = true;
 			
-			MAPQ* temp_MAPQ1 = new MAPQ(test->get_mismatch(), r->quality);
+			MAPQ *temp_MAPQ1 = new MAPQ(test->get_mismatch(), r->quality);
 			a->MAPQ = temp_MAPQ1->get_MAPQ();
 
 			/*
@@ -175,6 +176,11 @@ int main(int argc, char* argv[])
 			a->FLAG += 32;	// + 0x20 - SEQ of the next segment in the template being reverse complemented - This part was done in preprocessed data, all reads are paired.
 			a->FLAG += 64;	// + 0x40 - the ﬁrst segment in the template
 
+			//temp_MAPQ1->~MAPQ();
+			//test->~Smith_Waterman();
+			delete temp_MAPQ1;
+			delete test;
+			delete[] reference_genome;
 			a_iterator.Next();
 		}
 
@@ -184,17 +190,16 @@ int main(int argc, char* argv[])
 
 		while (b_iterator.Current() != NULL) {
 			Alignment* b = b_iterator.Current()->Value();
-			char *reference_genome = genome.BaseIntervalDisc(b->chromosome, ((b->pos) - (prog_info.options->range_prefix)), ((b->pos + r2->seq_len - 1) + prog_info.options->range_suffix));
-			Smith_Waterman *test2 = new Smith_Waterman(r2->sequence, reference_genome, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
+			char *reference_genome2 = genome.BaseIntervalDisc(b->chromosome, ((b->pos) - (prog_info.options->range_prefix)), ((b->pos + r2->seq_len - 1) + prog_info.options->range_suffix));
+			Smith_Waterman *test2 = new Smith_Waterman(r2->sequence, reference_genome2, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
 			//Needleman_Wunch *test2 = new Needleman_Wunch(r->sequence, reference_genome, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
 			//Needleman_Wunch_Old *test2 = new Needleman_Wunch_Old(r->sequence, reference_genome, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
 			b->pos = b->pos + (test2->get_first_pos() - 1);
 			b->cigar = test2->get_cigar();
 			b->cigar_length = test2->get_cigar_length();
 			b->score = test2->get_matrix_max_score();
-			b->available = true;
 
-			MAPQ* temp_MAPQ2 = new MAPQ(test2->get_mismatch(), r2->quality);
+			MAPQ *temp_MAPQ2 = new MAPQ(test2->get_mismatch(), r2->quality);
 			b->MAPQ = temp_MAPQ2->get_MAPQ();
 
 			/*
@@ -205,13 +210,16 @@ int main(int argc, char* argv[])
 			b->FLAG += 16;	// + 0x10 - SEQ being reverse complemented - This part was done in preprocessed data, all reads are paired.
 			b->FLAG += 128;	// + 0x80 - the last segment in the template 
 
+			//temp_MAPQ2->~MAPQ();
+			//test2->~Smith_Waterman();
+			delete temp_MAPQ2;
+			delete test2;
+			delete[] reference_genome2;
 			b_iterator.Next();
 		}
-		
 		iterator.Next();
 	}
 	cout << "SAM output part" << endl;
-	//output->print_output_data(reads, prog_info.options->T);
 	output->output_prepare(reads, prog_info.options->T);
 	//output->output_top_score_filtering();
 	cout << "Printing into file" << endl;

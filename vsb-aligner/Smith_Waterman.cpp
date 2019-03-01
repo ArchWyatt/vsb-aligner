@@ -269,13 +269,3 @@ int Smith_Waterman::get_matrix_max_score() {
 int Smith_Waterman::get_mismatch() {
 	return this->mismatch;
 }
-
-Smith_Waterman::~Smith_Waterman()
-{
-	this->gap_score = 0;
-	this->match_score = 0;
-	this->mismatch_score = 0;
-	this->ScoringMatrix = 0;
-	this->matrix_max = 0;
-	this->i_max = 0, j_max = 0;
-}

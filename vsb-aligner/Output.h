@@ -61,12 +61,40 @@ public:
 			Read* r = iterator.Current()->Value();
 			ListIterator<Alignment> a_iterator(r->alignments->First());
 			if (r->paired_read != NULL) {
-				int temp = 0; // 
+				int temp = 0;
 				Read* r2 = r->paired_read;
 				ListIterator<Alignment> b_iterator(r2->alignments->First());
+				int max_score = 0;
 				while (a_iterator.Current() != NULL) {
+					ListIterator<Alignment> a_iterator2(r->alignments->First());
 					Alignment* a = a_iterator.Current()->Value();
-					if ((a->score > T) && (a->available == true)) {
+					if (a->score > T){
+						if (a->score > max_score) {
+							max_score = a->score;
+							while ((a_iterator2.Current() != NULL)&&(a->available != false)) {
+								Alignment* a2 = a_iterator2.Current()->Value();
+								if (a2->available == true) {
+									if (a->score > a2->score) {
+										a2->available = false;
+										a2->duplicity = false;
+									}
+									else if (a2->score > a->score) {
+										a->available = false;
+										a->duplicity = false;
+									}
+									else {
+										a->duplicity = true;
+										a2->duplicity = true;
+									}
+								}
+								a_iterator2.Next();
+							}
+						}
+						else {
+							a->available = false;
+							a->duplicity = false;
+						}
+						
 						char* RNEXT;
 						u_int PNEXT = 0;
 						int TLEN = 0;
@@ -106,17 +134,44 @@ public:
 						/*
 						Store alignment into output list
 						*/
-						this->out_alignments->Append(new Alignment_output(id, r->name, a->FLAG, a->chromosome, a->pos, a->MAPQ, a->cigar, RNEXT, PNEXT, TLEN, r->sequence, r->quality, a->score));
+						this->out_alignments->Append(new Alignment_output(id, r->name, a->FLAG, a->chromosome, a->pos, a->MAPQ, a->cigar, RNEXT, PNEXT, TLEN, r->sequence, r->quality, a->score, a->available, a->duplicity));
 						id++;
 					}
 					a_iterator.Next();
 				}
 
+				max_score = 0;
 				a_iterator = r->alignments->First();
 				b_iterator = r2->alignments->First();
 				while (b_iterator.Current() != NULL) {
+					ListIterator<Alignment> b_iterator2(r2->alignments->First());
 					Alignment* b = b_iterator.Current()->Value();
-					if ((b->score > T) && (b->available == true)) {
+					if (b->score > T) {
+						if (b->score > max_score) {
+							max_score = b->score;
+							while ((b_iterator2.Current() != NULL) && (b->available != false)) {
+								Alignment* b2 = b_iterator2.Current()->Value();
+								if (b2->available == true) {
+									if (b->score > b2->score) {
+										b2->available = false;
+										b2->duplicity = false;
+									}
+									else if (b2->score > b->score) {
+										b->available = false;
+										b->duplicity = false;
+									}
+									else {
+										b->duplicity = true;
+										b2->duplicity = true;
+									}
+								}
+								b_iterator2.Next();
+							}
+						}
+						else {
+							b->available = false;
+							b->duplicity = false;
+						}
 						char* RNEXT;
 						u_int PNEXT = 0;
 						int TLEN = 0;
@@ -157,7 +212,7 @@ public:
 						/*
 						Store alignment into output list
 						*/
-						this->out_alignments->Append(new Alignment_output(id, r2->name, b->FLAG, b->chromosome, b->pos, b->MAPQ, b->cigar, RNEXT, PNEXT, TLEN, r2->sequence, r2->quality, b->score));
+						this->out_alignments->Append(new Alignment_output(id, r2->name, b->FLAG, b->chromosome, b->pos, b->MAPQ, b->cigar, RNEXT, PNEXT, TLEN, r2->sequence, r2->quality, b->score, b->available, b->duplicity));
 						id++;
 					}
 					b_iterator.Next();
@@ -205,7 +260,6 @@ public:
 			iterator.Next();
 		}
 		this->ofs.close();
-		
 	}
 	
 	/*
@@ -214,24 +268,32 @@ public:
 	void print_output_data() {
 		this->ofs.open(this->sam_file, ios::out | ios::app);
 		ListIterator<Alignment_output> iterator(out_alignments->First());
+		int all = 0;
+		int dup = 0;
 		while (iterator.Current() != NULL) {
 			Alignment_output* out = iterator.Current()->Value();
-			if (out->available == true) {
-				this->ofs << out->QNAME << "\t";
-				this->ofs << out->FLAG << "\t";
-				this->ofs << out->RNAME << "\t";
-				this->ofs << out->POS << "\t";
-				this->ofs << out->MAPQ << "\t";
-				this->ofs << out->CIGAR << "\t";
-				this->ofs << out->RNEXT << "\t";
-				this->ofs << out->PNEXT << "\t";
-				this->ofs << out->TLEN << "\t";
-				this->ofs << out->SEQ << "\t";
-				this->ofs << out->QUAL << "\t";
-				this->ofs << "\n";
+			all++;
+			this->ofs << out->QNAME << "\t";
+			this->ofs << out->FLAG << "\t";
+			this->ofs << out->RNAME << "\t";
+			this->ofs << out->POS << "\t";
+			this->ofs << out->MAPQ << "\t";
+			this->ofs << out->CIGAR << "\t";
+			this->ofs << out->RNEXT << "\t";
+			this->ofs << out->PNEXT << "\t";
+			this->ofs << out->TLEN << "\t";
+			this->ofs << out->SEQ << "\t";
+			this->ofs << out->QUAL << "\t";
+			this->ofs << "Score: " << out->score << "\t";
+			if (out->duplicity == true) {
+				this->ofs << "S"  << "\t";
+				dup++;
 			}
+			this->ofs << "\n";
 			iterator.Next();
 		}
+		this->ofs << all << "\t";
+		this->ofs << dup << "\t";
 		this->ofs.close();
 	}	
 };

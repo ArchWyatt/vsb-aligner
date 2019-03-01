@@ -33,5 +33,4 @@ public:
 		return temp;
 	};
 	~MAPQ() {};
-
 };
