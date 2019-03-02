@@ -44,7 +44,7 @@ public:
 		mismatch_score = -3;
 
 		range_prefix = 0;
-		range_suffix = 0; 
+		range_suffix = 10; 
 	};
 
 	~ProgOptions() {

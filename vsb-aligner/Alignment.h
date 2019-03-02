@@ -19,7 +19,7 @@ public:
 	u_int pos;
 
 	/* Sekce: Martin Kubala */
-	char* cigar;
+	string cigar;
 	u_int cigar_length;
 	u_int score;
 	/* Attribute for output, if it is true, alignment will be printed out */

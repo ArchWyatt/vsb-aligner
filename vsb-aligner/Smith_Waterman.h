@@ -12,6 +12,7 @@ private:
 	char *aa;					//Read
 	char *bb;					//Reference genome
 	char *cigar;				//Temporary cigar before final version
+	string cigar_final;			//Final cigar
 	string cigar_str = "";		//Cigar string computed in Smith_Waterman
 	int cigar_length = 0;
 	int gap_score = 0;
@@ -27,11 +28,11 @@ public:
 	Smith_Waterman(char* a, char* b, int gap_score, int match_score, int mismatch_score);
 	int CalculateScore(int i, int j);
 	int NextMove(int pos_i, int pos_j);
-	~Smith_Waterman() {};
+	~Smith_Waterman();
 	int get_first_pos();
 	int get_last_pos();
-	char* Cigar(char *a);
-	char* get_cigar();
+	void Cigar(char *a);
+	string get_cigar();
 	int get_cigar_length();
 	int get_matrix_max_score();
 	int get_mismatch();

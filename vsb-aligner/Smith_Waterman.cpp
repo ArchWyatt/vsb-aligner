@@ -29,8 +29,8 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 		this->ScoringMatrix[0][j] = 0;
 	}
 
-	/* Fill Matrix
-
+	/*
+	Fill Matrix
 	*/
 	for (int i = 1; i < lena; i++) {
 		for (int j = 1; j < lenb; j++) {
@@ -51,37 +51,24 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 	up:       gap in sequence 1
 	left:     gap in sequence 2
 	*/
-	string RetA, RetB;
-	stack<char> SA, SB, SCigar;
+	stack<char> SCigar;
 	int pos_i = this->i_max;
 	int pos_j = this->j_max;
-	if ((this->aa[pos_i]) != (this->bb[pos_j])) {
-		this->mismatch++;
-	}
-	SA.push(this->aa[pos_i]);
-	SB.push(this->bb[pos_j]);
-	SCigar.push('M');
 	int move = NextMove(pos_i, pos_j);
 	while (move != 0) {
 		if (move == 1) { // Diagonal move
 			if ((this->aa[pos_i - 1]) != (this->bb[pos_j - 1])) {
 				this->mismatch++;
 			}
-			SA.push(this->aa[pos_i - 1]);
-			SB.push(this->bb[pos_j - 1]);
 			SCigar.push('M');
 			pos_i = pos_i - 1;
 			pos_j = pos_j - 1;
 		}
 		else if (move == 2) { // UP move
-			SA.push(this->aa[pos_i - 1]);
-			SB.push('-');
 			SCigar.push('I');
 			pos_i = pos_i - 1;
 		}
 		else if (move == 3) { // LEFT move
-			SA.push('-');
-			SB.push(this->bb[pos_j - 1]);
 			SCigar.push('D');
 			pos_j = pos_j - 1;
 		}
@@ -92,24 +79,23 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 	}
 	this->i_min = pos_i;
 	this->j_min = pos_j;
-	SA.push(this->aa[pos_i - 1]);
-	SB.push(this->bb[pos_j - 1]);
 	SCigar.push('M');
 
-	while (!SA.empty())
+	while (!SCigar.empty())
 	{
-		RetA += SA.top();
-		RetB += SB.top();
 		this->cigar_str += SCigar.top();
-		SA.pop();
-		SB.pop();
 		SCigar.pop();
 	}
 
 	//CIGAR String computing
-	this->cigar = new char[this->cigar_str.length()];
+	this->cigar = strdup(this->cigar_str.c_str());
+	Cigar(this->cigar);
+	/*
+	this->cigar = new char[this->cigar_str.length()+1];
 	strcpy(this->cigar, this->cigar_str.c_str());
-	this->cigar = Cigar(this->cigar);
+	this->cigar[this->cigar_str.length()] = '\0';
+	Cigar(this->cigar);
+	*/
 }
 
 int Smith_Waterman::CalculateScore(int i, int j)
@@ -173,77 +159,78 @@ int Smith_Waterman::NextMove(int pos_i, int pos_j) {
 	}
 }
 
-char* Smith_Waterman::Cigar(char *a) {
-	char* out;
-	string test = "";
+void Smith_Waterman::Cigar(char *a) {
+	string temp_str = "";
 	int M = 0;
 	int I = 0;
 	int D = 0;
+	bool first_M = false;
 	for (int i = 0; i < strlen(a); i++) {
 		if (a[i] == 'M') {
+			if (first_M == false) {
+				first_M = true;
+			}
 			M += 1;
 			this->cigar_length += 1;
 			if (I > 0) {
-				test += to_string(I);
-				test += 'I';
+				temp_str += to_string(I);
+				temp_str += 'I';
 				I = 0;
 			}
 			else if (D > 0) {
-				test += to_string(D);
-				test += 'D';
+				temp_str += to_string(D);
+				temp_str += 'D';
 				D = 0;
 			}
 		}
-		else if (a[i] == 'I') {
+		else if ((a[i] == 'I')&&(first_M == true)) {
 			I += 1;
 			this->cigar_length += 1;
 			if (M > 0) {
-				test += to_string(M);
-				test += 'M';
+				temp_str += to_string(M);
+				temp_str += 'M';
 				M = 0;
 			}
 			else if (D > 0) {
-				test += to_string(D);
-				test += 'D';
+				temp_str += to_string(D);
+				temp_str += 'D';
 				D = 0;
 			}
 		}
-		else if (a[i] == 'D') {
+		else if ((a[i] == 'D') && (first_M == true)) {
 			D += 1;
 			this->cigar_length += 1;
 			if (M > 0) {
-				test += to_string(M);
-				test += 'M';
+				temp_str += to_string(M);
+				temp_str += 'M';
 				M = 0;
 			}
 			else if (I > 0) {
-				test += to_string(I);
-				test += 'I';
+				temp_str += to_string(I);
+				temp_str += 'I';
 				I = 0;
 			}
 		}
 	}
 
 	if (M > 0) {
-		test += to_string(M);
-		test += 'M';
+		temp_str += to_string(M);
+		temp_str += 'M';
 		M = 0;
 	}
+	/* We need only M at the beginnning of the ciar string
 	else if (I > 0) {
-		test += to_string(I);
-		test += 'I';
+		temp_str += to_string(I);
+		temp_str += 'I';
 		I = 0;
 	}
 	else if (D > 0) {
-		test += to_string(D);
-		test += 'D';
+		temp_str += to_string(D);
+		temp_str += 'D';
 		D = 0;
 	}
-
-	out = new char[test.length()];
-	strcpy(out, test.c_str());
-
-	return out;
+	*/
+	this->cigar_final = temp_str;
 }
 
 int Smith_Waterman::get_first_pos() {
@@ -254,8 +241,8 @@ int Smith_Waterman::get_last_pos() {
 	return this->j_max;
 }
 
-char* Smith_Waterman::get_cigar() {
-	return this->cigar;
+string Smith_Waterman::get_cigar() {
+	return this->cigar_final;
 }
 
 int Smith_Waterman::get_cigar_length() {
@@ -268,4 +255,19 @@ int Smith_Waterman::get_matrix_max_score() {
 
 int Smith_Waterman::get_mismatch() {
 	return this->mismatch;
+}
+
+Smith_Waterman::~Smith_Waterman() {
+	int lena = strlen(aa) + 1;
+	int lenb = strlen(bb) + 1;
+	for (int i = 0; i < lena; i++) {
+		for (int j = 0; j < lenb; j++) {
+		}
+		delete[] ScoringMatrix[i];
+	}
+	ScoringMatrix = NULL;
+	aa = NULL;
+	bb = NULL;
+	delete[] cigar;
+	cigar = NULL;
 }

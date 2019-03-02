@@ -60,38 +60,40 @@ public:
 		ListIterator<Read> iterator(reads->First());
 		while (iterator.Current() != NULL) {
 			Read* r = iterator.Current()->Value();
-			ListIterator<Alignment> a_iterator(r->alignments->First());
+			
 			if (r->paired_read != NULL) {
 				int temp = 0;
 				Read* r2 = r->paired_read;
+				ListIterator<Alignment> a_iterator(r->alignments->First());
 				ListIterator<Alignment> b_iterator(r2->alignments->First());
 				/*
 				Find Max Score for Reads alignments
 				*/
 				this->score_MAX = 0;
-				ListIterator<Alignment> a_iterator2(r->alignments->First());
-				while (a_iterator2.Current() != NULL) {
-					Alignment* a2 = a_iterator2.Current()->Value();
+				a_iterator = r->alignments->First();
+				while (a_iterator.Current() != NULL) {
+					Alignment* a2 = a_iterator.Current()->Value();
 					if (a2->score > this->score_MAX) {
 						this->score_MAX = a2->score;
 					}
-					a_iterator2.Next();
+					a_iterator.Next();
 				}
 				/*
 				Count of Reads alignments with top score
 				*/
 				this->alternative_reads = 0;
-				a_iterator2 = r->alignments->First();
-				while (a_iterator2.Current() != NULL) {
-					Alignment* a2 = a_iterator2.Current()->Value();
+				a_iterator = r->alignments->First();
+				while (a_iterator.Current() != NULL) {
+					Alignment* a2 = a_iterator.Current()->Value();
 					if (a2->score == this->score_MAX) {
 						this->alternative_reads++;
 					}
-					a_iterator2.Next();
+					a_iterator.Next();
 				}
 				/*
-				Alignments of 
+				Read alignments processing
 				*/
+				a_iterator = r->alignments->First();
 				while (a_iterator.Current() != NULL) {
 					Alignment* a = a_iterator.Current()->Value();
 					if (a->score > T){
@@ -146,34 +148,35 @@ public:
 					a_iterator.Next();
 				}
 
-				
-				a_iterator = r->alignments->First();
-				b_iterator = r2->alignments->First();
 				/*
 				Find Max Score for Reads alignments
 				*/
 				this->score_MAX = 0;
-				ListIterator<Alignment> a_iterator2(r->alignments->First());
-				while (a_iterator2.Current() != NULL) {
-					Alignment* a2 = a_iterator2.Current()->Value();
-					if (a2->score > this->score_MAX) {
-						this->score_MAX = a2->score;
+				b_iterator = r2->alignments->First();
+				while (b_iterator.Current() != NULL) {
+					Alignment* b2 = b_iterator.Current()->Value();
+					if (b2->score > this->score_MAX) {
+						this->score_MAX = b2->score;
 					}
-					a_iterator2.Next();
+					b_iterator.Next();
 				}
 				/*
 				Count of Reads alignments with top score
 				*/
 				this->alternative_reads = 0;
-				a_iterator2 = r->alignments->First();
-				while (a_iterator2.Current() != NULL) {
-					Alignment* a2 = a_iterator2.Current()->Value();
-					if (a2->score == this->score_MAX) {
+				b_iterator = r2->alignments->First();
+				while (b_iterator.Current() != NULL) {
+					Alignment* b2 = b_iterator.Current()->Value();
+					if (b2->score == this->score_MAX) {
 						this->alternative_reads++;
 					}
-					a_iterator2.Next();
+					b_iterator.Next();
 				}
-				
+				/*
+				Read alignments processing
+				*/
+				a_iterator = r->alignments->First();
+				b_iterator = r2->alignments->First();
 				while (b_iterator.Current() != NULL) {
 					ListIterator<Alignment> b_iterator2(r2->alignments->First());
 					Alignment* b = b_iterator.Current()->Value();
