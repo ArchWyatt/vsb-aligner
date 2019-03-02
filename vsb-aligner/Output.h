@@ -20,6 +20,7 @@ private:
 	ofstream ofs;
 	char* sam_file = NULL;
 	int score_MAX = 0;
+	int alternative_reads = 0;
 	List<Alignment_output>* out_alignments = new List<Alignment_output>();
 public:
 	Output(char* output_file){
@@ -64,37 +65,42 @@ public:
 				int temp = 0;
 				Read* r2 = r->paired_read;
 				ListIterator<Alignment> b_iterator(r2->alignments->First());
-				int max_score = 0;
+				/*
+				Find Max Score for Reads alignments
+				*/
+				this->score_MAX = 0;
+				ListIterator<Alignment> a_iterator2(r->alignments->First());
+				while (a_iterator2.Current() != NULL) {
+					Alignment* a2 = a_iterator2.Current()->Value();
+					if (a2->score > this->score_MAX) {
+						this->score_MAX = a2->score;
+					}
+					a_iterator2.Next();
+				}
+				/*
+				Count of Reads alignments with top score
+				*/
+				this->alternative_reads = 0;
+				a_iterator2 = r->alignments->First();
+				while (a_iterator2.Current() != NULL) {
+					Alignment* a2 = a_iterator2.Current()->Value();
+					if (a2->score == this->score_MAX) {
+						this->alternative_reads++;
+					}
+					a_iterator2.Next();
+				}
+				/*
+				Alignments of 
+				*/
 				while (a_iterator.Current() != NULL) {
-					ListIterator<Alignment> a_iterator2(r->alignments->First());
 					Alignment* a = a_iterator.Current()->Value();
 					if (a->score > T){
-						if (a->score > max_score) {
-							max_score = a->score;
-							while ((a_iterator2.Current() != NULL)&&(a->available != false)) {
-								Alignment* a2 = a_iterator2.Current()->Value();
-								if (a2->available == true) {
-									if (a->score > a2->score) {
-										a2->available = false;
-										a2->duplicity = false;
-									}
-									else if (a2->score > a->score) {
-										a->available = false;
-										a->duplicity = false;
-									}
-									else {
-										a->duplicity = true;
-										a2->duplicity = true;
-									}
-								}
-								a_iterator2.Next();
-							}
+						/*
+						Alternative Read alignment with max score
+						*/
+						if ((a->score == this->score_MAX) && (this->alternative_reads > 1)) {
+							a->alternative = true;
 						}
-						else {
-							a->available = false;
-							a->duplicity = false;
-						}
-						
 						char* RNEXT;
 						u_int PNEXT = 0;
 						int TLEN = 0;
@@ -132,45 +138,51 @@ public:
 						}
 						temp = 0;
 						/*
-						Store alignment into output list
+						Store read alignment into output list
 						*/
-						this->out_alignments->Append(new Alignment_output(id, r->name, a->FLAG, a->chromosome, a->pos, a->MAPQ, a->cigar, RNEXT, PNEXT, TLEN, r->sequence, r->quality, a->score, a->available, a->duplicity));
+						this->out_alignments->Append(new Alignment_output(id, r->name, a->FLAG, a->chromosome, a->pos, a->MAPQ, a->cigar, RNEXT, PNEXT, TLEN, r->sequence, r->quality, a->score, a->available, a->alternative));
 						id++;
 					}
 					a_iterator.Next();
 				}
 
-				max_score = 0;
+				
 				a_iterator = r->alignments->First();
 				b_iterator = r2->alignments->First();
+				/*
+				Find Max Score for Reads alignments
+				*/
+				this->score_MAX = 0;
+				ListIterator<Alignment> a_iterator2(r->alignments->First());
+				while (a_iterator2.Current() != NULL) {
+					Alignment* a2 = a_iterator2.Current()->Value();
+					if (a2->score > this->score_MAX) {
+						this->score_MAX = a2->score;
+					}
+					a_iterator2.Next();
+				}
+				/*
+				Count of Reads alignments with top score
+				*/
+				this->alternative_reads = 0;
+				a_iterator2 = r->alignments->First();
+				while (a_iterator2.Current() != NULL) {
+					Alignment* a2 = a_iterator2.Current()->Value();
+					if (a2->score == this->score_MAX) {
+						this->alternative_reads++;
+					}
+					a_iterator2.Next();
+				}
+				
 				while (b_iterator.Current() != NULL) {
 					ListIterator<Alignment> b_iterator2(r2->alignments->First());
 					Alignment* b = b_iterator.Current()->Value();
 					if (b->score > T) {
-						if (b->score > max_score) {
-							max_score = b->score;
-							while ((b_iterator2.Current() != NULL) && (b->available != false)) {
-								Alignment* b2 = b_iterator2.Current()->Value();
-								if (b2->available == true) {
-									if (b->score > b2->score) {
-										b2->available = false;
-										b2->duplicity = false;
-									}
-									else if (b2->score > b->score) {
-										b->available = false;
-										b->duplicity = false;
-									}
-									else {
-										b->duplicity = true;
-										b2->duplicity = true;
-									}
-								}
-								b_iterator2.Next();
-							}
-						}
-						else {
-							b->available = false;
-							b->duplicity = false;
+						/*
+						Alternative Read alignment with max score
+						*/
+						if ((b->score == this->score_MAX) && (this->alternative_reads > 1)) {
+							b->alternative = true;
 						}
 						char* RNEXT;
 						u_int PNEXT = 0;
@@ -212,7 +224,7 @@ public:
 						/*
 						Store alignment into output list
 						*/
-						this->out_alignments->Append(new Alignment_output(id, r2->name, b->FLAG, b->chromosome, b->pos, b->MAPQ, b->cigar, RNEXT, PNEXT, TLEN, r2->sequence, r2->quality, b->score, b->available, b->duplicity));
+						this->out_alignments->Append(new Alignment_output(id, r2->name, b->FLAG, b->chromosome, b->pos, b->MAPQ, b->cigar, RNEXT, PNEXT, TLEN, r2->sequence, r2->quality, b->score, b->available, b->alternative));
 						id++;
 					}
 					b_iterator.Next();
@@ -285,8 +297,8 @@ public:
 			this->ofs << out->SEQ << "\t";
 			this->ofs << out->QUAL << "\t";
 			this->ofs << "Score: " << out->score << "\t";
-			if (out->duplicity == true) {
-				this->ofs << "S"  << "\t";
+			if (out->alternative == true) {
+				this->ofs << "A"  << "\t";
 				dup++;
 			}
 			this->ofs << "\n";

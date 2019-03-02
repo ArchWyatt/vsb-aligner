@@ -29,5 +29,5 @@ public:
 	/* FLAG	*/
 	u_int FLAG = 0;
 	/* Mark of alignment duplicity, to know, that there is same alignment */
-	bool duplicity = false;
+	bool alternative = false;
 };

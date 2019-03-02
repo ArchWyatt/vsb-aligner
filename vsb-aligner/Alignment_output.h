@@ -7,7 +7,7 @@ class Alignment_output
 {
 public:
 	Alignment_output() {};
-	Alignment_output(u_int idx, char* namex, u_int FLAGx, char* RNAMEx, u_int POSx, u_int MAPQx, char* CIGARx, char* RNEXTx, u_int PNEXTx, u_int TLENx, char* SEQx, char* QUALx, u_int scorex,bool available, bool duplicity) {
+	Alignment_output(u_int idx, char* namex, u_int FLAGx, char* RNAMEx, u_int POSx, u_int MAPQx, char* CIGARx, char* RNEXTx, u_int PNEXTx, u_int TLENx, char* SEQx, char* QUALx, u_int scorex,bool available, bool alternative) {
 
 		this->id = idx;
 		this->QNAME = namex;
@@ -23,7 +23,7 @@ public:
 		this->QUAL = QUALx;
 		this->score = scorex;
 		this->available = available;
-		this->duplicity = duplicity;
+		this->alternative = alternative;
 	};
 
 	~Alignment_output() {};
@@ -43,6 +43,6 @@ public:
 	char* QUAL;
 	u_int score;
 	bool available;
-	bool duplicity;
+	bool alternative;
 
 };
