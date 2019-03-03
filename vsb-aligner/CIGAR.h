@@ -8,7 +8,7 @@ using namespace std;
 class CIGAR
 {
 private:
-	char *cigar;			//Cigar string
+	char *cigar;			//Cigar long version string
 	int cigar_length = 0;	//Cigar Length
 	
 
@@ -76,7 +76,7 @@ public:
 			temp_str += 'M';
 			M = 0;
 		}
-		/* We need only M at the end of the ciar string
+		/* We need only M match/mismatch at the end of the CIGAR string
 		else if (I > 0) {
 			temp_str += to_string(I);
 			temp_str += 'I';

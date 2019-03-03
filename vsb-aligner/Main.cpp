@@ -110,7 +110,7 @@ int main(int argc, char* argv[])
 	
 	Genome genome(prog_info.genome_path);
 	
-	//zkotnrolovat existenci sa-indexu
+	//zkontrolovat existenci sa-indexu
 	if (!Genome::SAIndexExists(prog_info.genome_path)) {
 		cout << "Suffix array not found." << endl << "Beginning suffix array build... :" << endl;
 		genome.PrepareIndexes();
@@ -133,7 +133,8 @@ int main(int argc, char* argv[])
 	/*
 	Sekce: Martin Kubala
 	*/
-
+	//Start time measuring
+	auto start = chrono::high_resolution_clock::now();
 	cout << "Martin Kubala - Part" << endl;
 
 	//SAM file header
@@ -142,24 +143,18 @@ int main(int argc, char* argv[])
 	output->print_head(genom_out);
 	output->print_program_info(prog_info.options->ID, prog_info.options->PN, prog_info.options->VN, prog_info.options->T, prog_info.fq_F, prog_info.fq_R, prog_info.genome_path);
 
-	auto start = chrono::high_resolution_clock::now();
-
+	//Start of the computing part
 	cout << "Computing part" << endl;
-	//cout << "Number of reads: " << reads->Length() << "\n";
-	int read_i = 0;
-	int align_i1 = 0;
-	int align_i2 = 0;
+	
+	//Read list iteration
 	ListIterator<Read> iterator(reads->First());
 	while (iterator.Current() != NULL){
-		read_i++;
 		Read* r = iterator.Current()->Value();
 
+		//Read alignment list iteration
 		ListIterator<Alignment> a_iterator(r->alignments->First());
-
 		while(a_iterator.Current() != NULL){
-			align_i1++;
-			Alignment* a = a_iterator.Current()->Value();
-			
+			Alignment* a = a_iterator.Current()->Value();			
 			char *reference_genome = genome.BaseIntervalDisc(a->chromosome, ((a->pos)-(prog_info.options->range_prefix)), ((a->pos + r->seq_len - 1) + prog_info.options->range_suffix));
 			try {
 				Smith_Waterman *test = new Smith_Waterman(r->sequence, reference_genome, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
@@ -169,37 +164,35 @@ int main(int argc, char* argv[])
 				a->cigar = test->get_cigar();
 				a->cigar_length = test->get_cigar_length();
 				a->score = test->get_matrix_max_score();
-
+				
+				//MAP Quality part
 				MAPQ *temp_MAPQ1 = new MAPQ(test->get_mismatch(), r->quality);
 				a->MAPQ = temp_MAPQ1->get_MAPQ();
 
-				/*
-				FLAG part 1
-				*/
+				//FLAG part
 				a->FLAG += 1;	// + 0x1 - template having multiple segments in sequencing - This part was done in preprocessed data
 				a->FLAG += 2;	// + 0x2 - each segment properly aligned according to the aligner - This part was done in preprocessed data
 				a->FLAG += 32;	// + 0x20 - SEQ of the next segment in the template being reverse complemented - This part was done in preprocessed data, all reads are paired.
 				a->FLAG += 64;	// + 0x40 - the ﬁrst segment in the template
-
+				
+				//Clearing allocated memory
 				delete temp_MAPQ1;
 				delete test;
 				delete[] reference_genome;
 			}
 			catch (const std::exception& e) { // reference to the base of a polymorphic object
 				cout << e.what() << endl; // information from length_error printed
-			}
-			
+			}		
 			a_iterator.Next();
 		}
 
+		//Paired read
 		Read* r2 = r->paired_read;
-
+		
+		//Paired Read alignment list iteration
 		ListIterator<Alignment> b_iterator(r2->alignments->First());
-
 		while (b_iterator.Current() != NULL) {
-			align_i2++;
 			Alignment* b = b_iterator.Current()->Value();
-			
 			char *reference_genome2 = genome.BaseIntervalDisc(b->chromosome, ((b->pos) - (prog_info.options->range_prefix)), ((b->pos + r2->seq_len - 1) + prog_info.options->range_suffix));
 			try {
 				Smith_Waterman *test2 = new Smith_Waterman(r2->sequence, reference_genome2, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
@@ -209,18 +202,18 @@ int main(int argc, char* argv[])
 				b->cigar = test2->get_cigar();
 				b->cigar_length = test2->get_cigar_length();
 				b->score = test2->get_matrix_max_score();
-
+				
+				//MAP Quality part
 				MAPQ *temp_MAPQ2 = new MAPQ(test2->get_mismatch(), r2->quality);
 				b->MAPQ = temp_MAPQ2->get_MAPQ();
 
-				/*
-				FLAG part 2
-				*/
+				//FLAG part
 				b->FLAG += 1;	// + 0x1 - template having multiple segments in sequencing - This part was done in preprocessed data
 				b->FLAG += 2;	// + 0x2 - each segment properly aligned according to the aligner - This part was done in preprocessed data
 				b->FLAG += 16;	// + 0x10 - SEQ being reverse complemented - This part was done in preprocessed data, all reads are paired.
 				b->FLAG += 128;	// + 0x80 - the last segment in the template 
 
+				//Clearing allocated memory
 				delete temp_MAPQ2;
 				delete test2;
 				delete[] reference_genome2;
@@ -233,14 +226,9 @@ int main(int argc, char* argv[])
 		}
 		iterator.Next();
 	}
-	/*
-	cout << "Reads: " << read_i << endl;
-	cout << "align1: " << align_i1 << endl;
-	cout << "align2: " << align_i2 << endl;
-	*/
 	cout << "SAM output part" << endl;
 	output->output_prepare(reads);
-	//output->output_top_score_filtering(prog_info.options->T);
+	output->output_top_score_filtering(prog_info.options->T);
 	cout << "Printing into file" << endl;
 	output->print_output_data();
 
