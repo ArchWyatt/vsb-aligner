@@ -145,17 +145,21 @@ int main(int argc, char* argv[])
 	auto start = chrono::high_resolution_clock::now();
 
 	cout << "Computing part" << endl;
-
-	//cout << reads->Length() << "\n"; Number of the reads
-
+	//cout << "Number of reads: " << reads->Length() << "\n";
+	int read_i = 0;
+	int align_i1 = 0;
+	int align_i2 = 0;
 	ListIterator<Read> iterator(reads->First());
 	while (iterator.Current() != NULL){
+		read_i++;
 		Read* r = iterator.Current()->Value();
 
 		ListIterator<Alignment> a_iterator(r->alignments->First());
 
 		while(a_iterator.Current() != NULL){
+			align_i1++;
 			Alignment* a = a_iterator.Current()->Value();
+			
 			char *reference_genome = genome.BaseIntervalDisc(a->chromosome, ((a->pos)-(prog_info.options->range_prefix)), ((a->pos + r->seq_len - 1) + prog_info.options->range_suffix));
 			try {
 				Smith_Waterman *test = new Smith_Waterman(r->sequence, reference_genome, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
@@ -184,6 +188,7 @@ int main(int argc, char* argv[])
 			catch (const std::exception& e) { // reference to the base of a polymorphic object
 				cout << e.what() << endl; // information from length_error printed
 			}
+			
 			a_iterator.Next();
 		}
 
@@ -192,7 +197,9 @@ int main(int argc, char* argv[])
 		ListIterator<Alignment> b_iterator(r2->alignments->First());
 
 		while (b_iterator.Current() != NULL) {
+			align_i2++;
 			Alignment* b = b_iterator.Current()->Value();
+			
 			char *reference_genome2 = genome.BaseIntervalDisc(b->chromosome, ((b->pos) - (prog_info.options->range_prefix)), ((b->pos + r2->seq_len - 1) + prog_info.options->range_suffix));
 			try {
 				Smith_Waterman *test2 = new Smith_Waterman(r2->sequence, reference_genome2, prog_info.options->gap_score, prog_info.options->match_score, prog_info.options->mismatch_score);
@@ -221,13 +228,19 @@ int main(int argc, char* argv[])
 			catch (const std::exception& e) { // reference to the base of a polymorphic object
 				cout << e.what() << endl; // information from length_error printed
 			}
+			
 			b_iterator.Next();
 		}
 		iterator.Next();
 	}
+	/*
+	cout << "Reads: " << read_i << endl;
+	cout << "align1: " << align_i1 << endl;
+	cout << "align2: " << align_i2 << endl;
+	*/
 	cout << "SAM output part" << endl;
-	output->output_prepare(reads, prog_info.options->T);
-	//output->output_top_score_filtering();
+	output->output_prepare(reads);
+	//output->output_top_score_filtering(prog_info.options->T);
 	cout << "Printing into file" << endl;
 	output->print_output_data();
 

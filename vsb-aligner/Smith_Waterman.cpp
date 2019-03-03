@@ -89,13 +89,10 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 
 	//CIGAR String computing
 	this->cigar = strdup(this->cigar_str.c_str());
-	Cigar(this->cigar);
-	/*
-	this->cigar = new char[this->cigar_str.length()+1];
-	strcpy(this->cigar, this->cigar_str.c_str());
-	this->cigar[this->cigar_str.length()] = '\0';
-	Cigar(this->cigar);
-	*/
+	CIGAR *cigar_cls = new CIGAR(this->cigar);
+	this->cigar_final = cigar_cls->get_CIGAR();
+	this->cigar_length = cigar_cls->get_CIGAR_length();
+	delete cigar_cls;
 }
 
 int Smith_Waterman::CalculateScore(int i, int j)
@@ -157,80 +154,6 @@ int Smith_Waterman::NextMove(int pos_i, int pos_j) {
 		cout << "Chyba programu" << endl;
 		return 4;
 	}
-}
-
-void Smith_Waterman::Cigar(char *a) {
-	string temp_str = "";
-	int M = 0;
-	int I = 0;
-	int D = 0;
-	bool first_M = false;
-	for (int i = 0; i < strlen(a); i++) {
-		if (a[i] == 'M') {
-			if (first_M == false) {
-				first_M = true;
-			}
-			M += 1;
-			this->cigar_length += 1;
-			if (I > 0) {
-				temp_str += to_string(I);
-				temp_str += 'I';
-				I = 0;
-			}
-			else if (D > 0) {
-				temp_str += to_string(D);
-				temp_str += 'D';
-				D = 0;
-			}
-		}
-		else if ((a[i] == 'I')&&(first_M == true)) {
-			I += 1;
-			this->cigar_length += 1;
-			if (M > 0) {
-				temp_str += to_string(M);
-				temp_str += 'M';
-				M = 0;
-			}
-			else if (D > 0) {
-				temp_str += to_string(D);
-				temp_str += 'D';
-				D = 0;
-			}
-		}
-		else if ((a[i] == 'D') && (first_M == true)) {
-			D += 1;
-			this->cigar_length += 1;
-			if (M > 0) {
-				temp_str += to_string(M);
-				temp_str += 'M';
-				M = 0;
-			}
-			else if (I > 0) {
-				temp_str += to_string(I);
-				temp_str += 'I';
-				I = 0;
-			}
-		}
-	}
-
-	if (M > 0) {
-		temp_str += to_string(M);
-		temp_str += 'M';
-		M = 0;
-	}
-	/* We need only M at the beginnning of the ciar string
-	else if (I > 0) {
-		temp_str += to_string(I);
-		temp_str += 'I';
-		I = 0;
-	}
-	else if (D > 0) {
-		temp_str += to_string(D);
-		temp_str += 'D';
-		D = 0;
-	}
-	*/
-	this->cigar_final = temp_str;
 }
 
 int Smith_Waterman::get_first_pos() {

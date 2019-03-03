@@ -1,8 +1,8 @@
 #include <iostream>     // std::cout, std::endl
 #include <string>
-#include <algorithm>    // std::max
 #include <iomanip>      // std::setw
 #include <stack>
+#include "CIGAR.h"
 
 using namespace std;
 
@@ -31,7 +31,6 @@ public:
 	~Smith_Waterman();
 	int get_first_pos();
 	int get_last_pos();
-	void Cigar(char *a);
 	string get_cigar();
 	int get_cigar_length();
 	int get_matrix_max_score();

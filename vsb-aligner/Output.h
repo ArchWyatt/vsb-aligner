@@ -55,7 +55,7 @@ public:
 	/*
 	Preparing List of alignments output format for better handling 
 	*/
-	void output_prepare(List<Read>* reads, int T) {
+	void output_prepare(List<Read>* reads) {
 		u_int id = 0;
 		ListIterator<Read> iterator(reads->First());
 		while (iterator.Current() != NULL) {
@@ -96,57 +96,58 @@ public:
 				a_iterator = r->alignments->First();
 				while (a_iterator.Current() != NULL) {
 					Alignment* a = a_iterator.Current()->Value();
-					if (a->score > T){
-						/*
-						Alternative Read alignment with max score
-						*/
-						if ((a->score == this->score_MAX) && (this->alternative_reads > 1)) {
-							a->alternative = true;
-						}
-						char* RNEXT;
-						u_int PNEXT = 0;
-						int TLEN = 0;
-						/*
-						RNEXT calculating part
-						*/
-						string x1 = r->name;
-						string x2 = r->paired_read->name;
-						if (x1 == x2) {
-							RNEXT = "=";
-						}
-						else {
-							RNEXT = "*";
-						}
-						/*
-						PNEXT, TLEN calculating part
-						*/
-						if (b_iterator.Current() != NULL) {
-							Alignment* b = b_iterator.Current()->Value();
-							PNEXT = b->pos;
-							if (b->pos >= a->pos) {
-								temp = b->pos - a->pos;
-								temp += b->cigar_length;
-							}
-							else {
-								temp = a->pos - b->pos;
-								temp += a->cigar_length;
-							}
-							TLEN = temp + 1;
-							b_iterator.Next();
-						}
-						else {
-							PNEXT = 0;
-							TLEN = 0;
-						}
-						temp = 0;
-						/*
-						Store read alignment into output list
-						*/
-						this->out_alignments->Append(new Alignment_output(id, r->name, a->FLAG, a->chromosome, a->pos, a->MAPQ, a->cigar, RNEXT, PNEXT, TLEN, r->sequence, r->quality, a->score, a->available, a->alternative));
-						id++;
+
+					/*
+					Alternative Read alignment with max score
+					*/
+					if ((a->score == this->score_MAX) && (this->alternative_reads > 1)) {
+						a->alternative = true;
 					}
+					char* RNEXT;
+					u_int PNEXT = 0;
+					int TLEN = 0;
+					/*
+					RNEXT calculating part
+					*/
+					string x1 = r->name;
+					string x2 = r->paired_read->name;
+					if (x1 == x2) {
+						RNEXT = "=";
+					}
+					else {
+						RNEXT = "*";
+					}
+					/*
+					PNEXT, TLEN calculating part
+					*/
+					if (b_iterator.Current() != NULL) {
+						Alignment* b = b_iterator.Current()->Value();
+						PNEXT = b->pos;
+						if (b->pos >= a->pos) {
+							temp = b->pos - a->pos;
+							temp += b->cigar_length;
+						}
+						else {
+							temp = a->pos - b->pos;
+							temp += a->cigar_length;
+						}
+						TLEN = temp + 1;
+						b_iterator.Next();
+					}
+					else {
+						PNEXT = 0;
+						TLEN = 0;
+					}
+					temp = 0;
+					/*
+					Store read alignment into output list
+					*/
+
+					this->out_alignments->Append(new Alignment_output(id, r->name, a->FLAG, a->chromosome, a->pos, a->MAPQ, a->cigar, RNEXT, PNEXT, TLEN, r->sequence, r->quality, a->score, a->available, a->alternative));
+					id++;
 					a_iterator.Next();
 				}
+				
 
 				/*
 				Find Max Score for Reads alignments
@@ -180,58 +181,58 @@ public:
 				while (b_iterator.Current() != NULL) {
 					ListIterator<Alignment> b_iterator2(r2->alignments->First());
 					Alignment* b = b_iterator.Current()->Value();
-					if (b->score > T) {
-						/*
-						Alternative Read alignment with max score
-						*/
-						if ((b->score == this->score_MAX) && (this->alternative_reads > 1)) {
-							b->alternative = true;
-						}
-						char* RNEXT;
-						u_int PNEXT = 0;
-						int TLEN = 0;
-						/*
-						RNEXT calculating part
-						*/
-						string x1 = r2->name;
-						string x2 = r2->paired_read->name;
-						if (x1 == x2) {
-							RNEXT = "=";
-						}
-						else {
-							RNEXT = "*";
-						}
-						/*
-						PNEXT, TLEN calculating part
-						*/
-						if (a_iterator.Current() != NULL) {
-							Alignment* a = a_iterator.Current()->Value();
-							PNEXT = a->pos;
-							if (a->pos >= b->pos) {
-								temp = a->pos - b->pos;
-								temp += a->cigar_length;
-
-							}
-							else {
-								temp = b->pos - a->pos;
-								temp += b->cigar_length;
-							}
-							TLEN = -temp-1;
-							a_iterator.Next();
-						}
-						else {
-							PNEXT = 0;
-							TLEN = 0;
-						}
-						temp = 0;
-						/*
-						Store alignment into output list
-						*/
-						this->out_alignments->Append(new Alignment_output(id, r2->name, b->FLAG, b->chromosome, b->pos, b->MAPQ, b->cigar, RNEXT, PNEXT, TLEN, r2->sequence, r2->quality, b->score, b->available, b->alternative));
-						id++;
+					/*
+					Alternative Read alignment with max score
+					*/
+					if ((b->score == this->score_MAX) && (this->alternative_reads > 1)) {
+						b->alternative = true;
 					}
+					char* RNEXT;
+					u_int PNEXT = 0;
+					int TLEN = 0;
+					/*
+					RNEXT calculating part
+					*/
+					string x1 = r2->name;
+					string x2 = r2->paired_read->name;
+					if (x1 == x2) {
+						RNEXT = "=";
+					}
+					else {
+						RNEXT = "*";
+					}
+					/*
+					PNEXT, TLEN calculating part
+					*/
+					if (a_iterator.Current() != NULL) {
+						Alignment* a = a_iterator.Current()->Value();
+						PNEXT = a->pos;
+						if (a->pos >= b->pos) {
+							temp = a->pos - b->pos;
+							temp += a->cigar_length;
+
+						}
+						else {
+							temp = b->pos - a->pos;
+							temp += b->cigar_length;
+						}
+						TLEN = -temp - 1;
+						a_iterator.Next();
+					}
+					else {
+						PNEXT = 0;
+						TLEN = 0;
+					}
+					temp = 0;
+					/*
+					Store alignment into output list
+					*/
+					this->out_alignments->Append(new Alignment_output(id, r2->name, b->FLAG, b->chromosome, b->pos, b->MAPQ, b->cigar, RNEXT, PNEXT, TLEN, r2->sequence, r2->quality, b->score, b->available, b->alternative));
+					id++;
+
 					b_iterator.Next();
 				}
+				
 
 			}
 
@@ -242,39 +243,15 @@ public:
 	/*
 	Filter the alignments by the highes score of the alingments.
 	*/
-	void output_top_score_filtering() {
-		//Zde bude protrizeni vyustupu kde bude mozne vypsat pouze alignmenty s nejvyssim score, pripadne alignmenty ktera budou mit spolecne nejvyssi score.
-		//Vector bude pro alignmenty jenž jsou si rovny, bude se ukladat id prvku v listu a pokud bude prvek vyšší, tak se id použije k zneplatnění těchto alignmentu v samostatném cyklu dokud nebude vektor prázdný, takže while a následně bude porovnávaní nejvyššího alignmentu pokračovat.
+	void output_top_score_filtering(int T) {
 		ListIterator<Alignment_output> iterator(out_alignments->First());
 		while (iterator.Current() != NULL) {
 			Alignment_output* out = iterator.Current()->Value();
-			score_MAX = out->score;
-			ListIterator<Alignment_output> iterator2(out_alignments->First());
-			while (iterator2.Current() != NULL) {
-				Alignment_output* out2 = iterator2.Current()->Value();
-				if (out2->available == true) {
-					string x1 = out->SEQ;
-					string x2 = out2->SEQ;
-					if (x1 == x2) {
-						if (out2->score < this->score_MAX) { //If score is lesser then MAX?score, set available to false
-							out2->available = false;
-						}
-						else if (out2->score == this->score_MAX) {
-							//Nothing will happen
-							//Add duplicity
-						}
-						else {
-							this->score_MAX = out2->score;
-							out->available = false;
-							//Remove duplicity list, add id to other list for disavailable list
-						}
-					}
+			if (out->score < T) {
+				out->available = false;
 				}
-				iterator2.Next();
-			}
 			iterator.Next();
 		}
-		this->ofs.close();
 	}
 	
 	/*
@@ -284,31 +261,38 @@ public:
 		this->ofs.open(this->sam_file, ios::out | ios::app);
 		ListIterator<Alignment_output> iterator(out_alignments->First());
 		int all = 0;
+		int filter = 0;
 		int dup = 0;
 		while (iterator.Current() != NULL) {
 			Alignment_output* out = iterator.Current()->Value();
-			all++;
-			this->ofs << out->QNAME << "\t";
-			this->ofs << out->FLAG << "\t";
-			this->ofs << out->RNAME << "\t";
-			this->ofs << out->POS << "\t";
-			this->ofs << out->MAPQ << "\t";
-			this->ofs << out->CIGAR << "\t";
-			this->ofs << out->RNEXT << "\t";
-			this->ofs << out->PNEXT << "\t";
-			this->ofs << out->TLEN << "\t";
-			this->ofs << out->SEQ << "\t";
-			this->ofs << out->QUAL << "\t";
-			this->ofs << "Score: " << out->score << "\t";
-			if (out->alternative == true) {
-				this->ofs << "A"  << "\t";
-				dup++;
+			if (out->available == true) {
+				all++;
+				this->ofs << out->QNAME << "\t";
+				this->ofs << out->FLAG << "\t";
+				this->ofs << out->RNAME << "\t";
+				this->ofs << out->POS << "\t";
+				this->ofs << out->MAPQ << "\t";
+				this->ofs << out->CIGAR << "\t";
+				this->ofs << out->RNEXT << "\t";
+				this->ofs << out->PNEXT << "\t";
+				this->ofs << out->TLEN << "\t";
+				this->ofs << out->SEQ << "\t";
+				this->ofs << out->QUAL << "\t";
+				this->ofs << "Score: " << out->score << "\t";
+				if (out->alternative == true) {
+					this->ofs << "A" << "\t";
+					dup++;
+				}
+				this->ofs << "\n";
 			}
-			this->ofs << "\n";
+			else {
+				filter++;
+			}
 			iterator.Next();
 		}
-		this->ofs << all << "\t";
-		this->ofs << dup << "\t";
+		this->ofs << "Number of read alignments: " << all << "\n";
+		this->ofs << "Number of alternative read alignments: " << dup << "\n";
+		this->ofs << "Number of fitlered out read alignments: " << filter << "\n";
 		this->ofs.close();
 	}	
 };

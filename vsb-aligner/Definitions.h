@@ -36,7 +36,7 @@ public:
 		ID = "vsb";
 		PN = "vsb-aligner";
 		VN = "0.1";
-		T = 0;
+		T = 20;
 
 		//Smith Waterman score
 		gap_score = -2;
