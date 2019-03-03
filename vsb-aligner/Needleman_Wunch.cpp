@@ -47,89 +47,69 @@ Needleman_Wunch::Needleman_Wunch(char* a, char* b, int gap_score, int match_scor
 	}
 
 	/*
-	Traceback
-	diagonal: match/mismatch
-	up:       gap in sequence 1
-	left:     gap in sequence 2
+		Traceback
+		diagonal: match/mismatch
+		up:       gap in sequence 1
+		left:     gap in sequence 2
 	*/
-	string RetA, RetB;
-	stack<char> SA, SB, SCigar;
-
-	//char *xA, *xB, *xCigar;
-	int lenc = strlen(a);
-	int lend = strlen(b);
-	if ((this->aa[lenc]) != (this->bb[lend])) {
-		this->mismatch++;
-	}
-	SA.push(this->aa[lenc]);
-	SB.push(this->bb[lend]);
-	SCigar.push('M');
-	while (lenc != 0 && lend != 0) // Change (lenc != 0 || lend != 0) to (lenc != 0 && lend != 0) to to filter out prefix with Inserts and Deletes.
+	stack<char> SCigar;
+	int pos_i = this->i_max;
+	int pos_j = this->j_max;
+	while (pos_i != 0 && pos_j != 0)
 	{
-		if (lenc == 0)
+		if (pos_i == 0)
 		{
-			SA.push('-');
-			SB.push(bb[lend - 1]);
 			SCigar.push('D');
-			lend--;
+			pos_j--;
 		}
-		else if (lend == 0)
+		else if (pos_j == 0)
 		{
-			SA.push(aa[lenc - 1]);
-			SB.push('-');
 			SCigar.push('I');
-			lenc--;
+			pos_i--;
 		}
 		else
 		{
 			int score = 0;
-			if (aa[lenc - 1] == bb[lend - 1]) {
+			if (aa[pos_i - 1] == bb[pos_j - 1]) {
 				score = this->match_score;
 			}
 			else {
 				score = this->mismatch_score;
 			}
-			if (ScoringMatrix[lenc][lend] == ScoringMatrix[lenc - 1][lend - 1] + score)
+			if (ScoringMatrix[pos_i][pos_j] == ScoringMatrix[pos_i - 1][pos_j - 1] + score)
 			{
-				if ((this->aa[lenc - 1]) != (this->bb[lend - 1])) {
+				if ((this->aa[pos_i - 1]) != (this->bb[pos_j - 1])) {
 					this->mismatch++;
 				}
-				SA.push(aa[lenc - 1]);
-				SB.push(bb[lend - 1]);
 				SCigar.push('M');
-				lenc--; lend--;
+				pos_i--; pos_j--;
 			}
-			else if (ScoringMatrix[lenc - 1][lend] > ScoringMatrix[lenc][lend - 1])
+			else if (ScoringMatrix[pos_i - 1][pos_j] > ScoringMatrix[pos_i][pos_j - 1])
 			{
-				SA.push(aa[lenc - 1]);
-				SB.push('-');
 				SCigar.push('I');
-				lenc--;
+				pos_i--;
 			}
 			else
 			{
-				SA.push('-');
-				SB.push(bb[lend - 1]);
 				SCigar.push('D');
-				lend--;
+				pos_j--;
 			}
 		}
 	}
 
-	while (!SA.empty())
+	//reverse CIGAR string
+	while (!SCigar.empty())
 	{
-		RetA += SA.top();
-		RetB += SB.top();
 		this->cigar_str += SCigar.top();
-		SA.pop();
-		SB.pop();
 		SCigar.pop();
 	}
 
-	//CIGAR String computing
-	this->cigar = new char[this->cigar_str.length()];
-	strcpy(this->cigar, this->cigar_str.c_str());
-	this->cigar = Cigar(this->cigar);
+	//CIGAR string computing
+	this->cigar = strdup(this->cigar_str.c_str());
+	CIGAR *cigar_cls = new CIGAR(this->cigar);
+	this->cigar_final = cigar_cls->get_CIGAR();
+	this->cigar_length = cigar_cls->get_CIGAR_length();
+	delete cigar_cls;
 }
 
 int Needleman_Wunch::CalculateScore(int i, int j)
@@ -158,79 +138,6 @@ int Needleman_Wunch::CalculateScore(int i, int j)
 	}
 }
 
-char* Needleman_Wunch::Cigar(char *a) {
-	char* out;
-	string test = "";
-	int M = 0;
-	int I = 0;
-	int D = 0;
-	for (int i = 0; i < strlen(a); i++) {
-		if (a[i] == 'M') {
-			M += 1;
-			this->cigar_length += 1;
-			if (I > 0) {
-				test += to_string(I);
-				test += 'I';
-				I = 0;
-			}
-			else if (D > 0) {
-				test += to_string(D);
-				test += 'D';
-				D = 0;
-			}
-		}
-		else if (a[i] == 'I') {
-			I += 1;
-			this->cigar_length += 1;
-			if (M > 0) {
-				test += to_string(M);
-				test += 'M';
-				M = 0;
-			}
-			else if (D > 0) {
-				test += to_string(D);
-				test += 'D';
-				D = 0;
-			}
-		}
-		else if (a[i] == 'D') {
-			D += 1;
-			this->cigar_length += 1;
-			if (M > 0) {
-				test += to_string(M);
-				test += 'M';
-				M = 0;
-			}
-			else if (I > 0) {
-				test += to_string(I);
-				test += 'I';
-				I = 0;
-			}
-		}
-	}
-
-	if (M > 0) {
-		test += to_string(M);
-		test += 'M';
-		M = 0;
-	}
-	else if (I > 0) {
-		test += to_string(I);
-		test += 'I';
-		I = 0;
-	}
-	else if (D > 0) {
-		test += to_string(D);
-		test += 'D';
-		D = 0;
-	}
-
-	out = new char[test.length()];
-	strcpy(out, test.c_str());
-
-	return out;
-}
-
 int Needleman_Wunch::get_first_pos() {
 	return this->j_min;
 }
@@ -239,8 +146,8 @@ int Needleman_Wunch::get_last_pos() {
 	return this->j_max;
 }
 
-char* Needleman_Wunch::get_cigar() {
-	return this->cigar;
+string Needleman_Wunch::get_cigar() {
+	return this->cigar_final;
 }
 
 int Needleman_Wunch::get_cigar_length() {
@@ -258,10 +165,16 @@ int Needleman_Wunch::get_mismatch() {
 
 Needleman_Wunch::~Needleman_Wunch()
 {
-	this->gap_score = 0;
-	this->match_score = 0;
-	this->mismatch_score = 0;
-	this->ScoringMatrix = 0;
-	this->matrix_max = 0;
-	this->i_max = 0, j_max = 0;
+	int lena = strlen(aa) + 1;
+	int lenb = strlen(bb) + 1;
+	for (int i = 0; i < lena; i++) {
+		for (int j = 0; j < lenb; j++) {
+		}
+		delete[] ScoringMatrix[i];
+	}
+	ScoringMatrix = NULL;
+	aa = NULL;
+	bb = NULL;
+	delete[] cigar;
+	cigar = NULL;
 }

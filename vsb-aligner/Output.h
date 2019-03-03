@@ -280,8 +280,11 @@ public:
 				this->ofs << out->QUAL << "\t";
 				this->ofs << "Score: " << out->score << "\t";
 				if (out->alternative == true) {
-					this->ofs << "A" << "\t";
+					this->ofs << "A:Y" << "\t";
 					dup++;
+				}
+				else {
+					this->ofs << "A:N" << "\t";
 				}
 				this->ofs << "\n";
 			}

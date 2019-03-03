@@ -81,13 +81,14 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 	this->j_min = pos_j;
 	SCigar.push('M');
 
+	//reverse CIGAR string
 	while (!SCigar.empty())
 	{
 		this->cigar_str += SCigar.top();
 		SCigar.pop();
 	}
 
-	//CIGAR String computing
+	//CIGAR string computing
 	this->cigar = strdup(this->cigar_str.c_str());
 	CIGAR *cigar_cls = new CIGAR(this->cigar);
 	this->cigar_final = cigar_cls->get_CIGAR();
