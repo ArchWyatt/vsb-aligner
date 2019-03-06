@@ -53,47 +53,34 @@ Needleman_Wunch::Needleman_Wunch(char* a, char* b, int gap_score, int match_scor
 		left:     gap in sequence 2
 	*/
 	stack<char> SCigar;
-	int pos_i = this->i_max;
-	int pos_j = this->j_max;
-	while (pos_i != 0 && pos_j != 0)
+	int m = this->i_max;
+	int n = this->j_max;
+	while (m > 0 && n > 0)
 	{
-		if (pos_i == 0)
+		int score = 0;
+		if (aa[m - 1] == bb[n - 1]) {
+			score = this->match_score;
+		}
+		else {
+			score = this->mismatch_score;
+		}
+		if (m > 0 && n > 0 && ScoringMatrix[m][n] == ScoringMatrix[m - 1][n - 1] + score)
+		{
+			if ((this->aa[m - 1]) != (this->bb[n - 1])) {
+				this->mismatch++;
+			}
+			SCigar.push('M');
+			m--; n--;
+		}
+		else if (n > 0 && ScoringMatrix[m][n] > ScoringMatrix[m][n - 1] - this->gap_score)
 		{
 			SCigar.push('D');
-			pos_j--;
-		}
-		else if (pos_j == 0)
-		{
-			SCigar.push('I');
-			pos_i--;
+			n--;
 		}
 		else
 		{
-			int score = 0;
-			if (aa[pos_i - 1] == bb[pos_j - 1]) {
-				score = this->match_score;
-			}
-			else {
-				score = this->mismatch_score;
-			}
-			if (ScoringMatrix[pos_i][pos_j] == ScoringMatrix[pos_i - 1][pos_j - 1] + score)
-			{
-				if ((this->aa[pos_i - 1]) != (this->bb[pos_j - 1])) {
-					this->mismatch++;
-				}
-				SCigar.push('M');
-				pos_i--; pos_j--;
-			}
-			else if (ScoringMatrix[pos_i - 1][pos_j] > ScoringMatrix[pos_i][pos_j - 1])
-			{
-				SCigar.push('I');
-				pos_i--;
-			}
-			else
-			{
-				SCigar.push('D');
-				pos_j--;
-			}
+			SCigar.push('I');
+			m--;
 		}
 	}
 
