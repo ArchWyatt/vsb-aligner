@@ -1,16 +1,17 @@
 #include <iostream>     // std::cout, std::endl
 #include <string>
-#include <stack>
 #include <algorithm>    // std::max
+#include <iomanip>      // std::setw
 #include "CIGAR.h"
+
 
 using namespace std;
 
-class Smith_Waterman_alternative
+class Needleman_Wunch_alternative
 {
 private:
-	char *aa;					//Read
-	char *bb;					//Reference genome
+	string a = "";
+	string b = "";
 	char *cigar;				//Temporary cigar before final version
 	string cigar_final = "";	//Final cigar
 	string cigar_str = "";		//Cigar string computed in Smith_Waterman
@@ -20,15 +21,16 @@ private:
 	int mismatch_score = 0;
 	int **ScoringMatrix;		//Score Matrix
 	int matrix_max = 0;			//The highest score in matrix.
-	int i_min = 0, j_min = 0;	//The row and column coordinates of the lowest score in matrix. (j is the first position of aligned read on reference genom)
+	int i_min = 1, j_min = 1;	/* The row and column coordinates of the lowest score in matrix. (j is the first position of aligned read on reference genom)
+								i_min and j_min will be everytime 1, because this algoritm will go throught whole matrix, from the end to the beginning.
+								*/
 	int i_max = 0, j_max = 0;	//The row and columbn coordinates of the highest score in matrix. (j is the last position of aligned read on reference genom)
 	int mismatch = 0;			//Mismatch with reference genom
 
 public:
-	Smith_Waterman_alternative(char* a, char* b, int gap_score, int match_score, int mismatch_score);
+	Needleman_Wunch_alternative(char* aa, char* bb, int gap_score, int match_score, int mismatch_score);
 	int CalculateScore(int i, int j);
-	int NextMove(int pos_i, int pos_j);
-	~Smith_Waterman_alternative();
+	~Needleman_Wunch_alternative();
 	int get_first_pos();
 	int get_last_pos();
 	string get_cigar();

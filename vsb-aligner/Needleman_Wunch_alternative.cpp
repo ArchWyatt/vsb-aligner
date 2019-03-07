@@ -1,17 +1,17 @@
 #pragma warning(disable:4996) //memcpy
-#include "Needleman_Wunch.h"
+#include "Needleman_Wunch_alternative.h"
 
-Needleman_Wunch::Needleman_Wunch(char* a, char* b, int gap_score, int match_score, int mismatch_score)
+Needleman_Wunch_alternative::Needleman_Wunch_alternative(char* aa, char* bb, int gap_score, int match_score, int mismatch_score)
 {
 	this->gap_score = gap_score;
 	this->match_score = match_score;
 	this->mismatch_score = mismatch_score;
 
-	this->aa = a;
-	this->bb = b;
+	this->a = aa;
+	this->b = bb;
 
-	int lena = strlen(a) + 1; // Pomocná promenná pro ScoringMatrix lena - read
-	int lenb = strlen(b) + 1; // Pomocná promenná pro ScoringMatrix lenb - reference genome
+	int lena = this->a.length() + 1; // Pomocná promenná pro ScoringMatrix lena - read
+	int lenb = this->b.length() + 1; // Pomocná promenná pro ScoringMatrix lenb - reference genome
 
 	// Scoring Matrix Inicialization
 	this->ScoringMatrix = new int *[lena];
@@ -29,9 +29,24 @@ Needleman_Wunch::Needleman_Wunch(char* a, char* b, int gap_score, int match_scor
 		ScoringMatrix[0][j] = j * this->gap_score;
 	}
 
-	/* 
+	/*
 	Fill Matrix
 	*/
+	for (int i = 1; i < lena; i++) {
+		for (int j = 1; j < lenb; j++) {
+			int score = 0;
+			score = CalculateScore(i, j);
+			if (score > this->matrix_max)
+			{
+				this->matrix_max = score;
+				this->i_max = i;
+				this->j_max = j;
+			}
+			this->ScoringMatrix[i][j] = score;
+		}
+	}
+
+	// Fill Matrix
 	for (int i = 1; i < lena; i++) {
 		for (int j = 1; j < lenb; j++) {
 			int score = 0;
@@ -57,7 +72,7 @@ Needleman_Wunch::Needleman_Wunch(char* a, char* b, int gap_score, int match_scor
 	while (m > 0 && n > 0)
 	{
 		int score = 0;
-		if (this->aa[m - 1] == this->bb[n - 1]) {
+		if (this->a[m - 1] == this->b[n - 1]) {
 			score = this->match_score;
 		}
 		else {
@@ -65,7 +80,7 @@ Needleman_Wunch::Needleman_Wunch(char* a, char* b, int gap_score, int match_scor
 		}
 		if (m > 0 && n > 0 && ScoringMatrix[m][n] == ScoringMatrix[m - 1][n - 1] + score)
 		{
-			if ((this->aa[m - 1]) != (this->bb[n - 1])) {
+			if ((this->a[m - 1]) != (this->b[n - 1])) {
 				this->mismatch++;
 			}
 			this->cigar_str = "M" + this->cigar_str;
@@ -91,69 +106,53 @@ Needleman_Wunch::Needleman_Wunch(char* a, char* b, int gap_score, int match_scor
 	delete cigar_cls;
 }
 
-int Needleman_Wunch::CalculateScore(int i, int j)
+int Needleman_Wunch_alternative::CalculateScore(int i, int j)
 {
-	int max = 0;
+
 	int similarity;
-	if (this->aa[i - 1] == this->bb[j - 1]) {
+	if (this->a[i - 1] == this->b[j - 1]) {
 		similarity = this->match_score;
 	}
 	else {
 		similarity = this->mismatch_score;
 	}
-
-
-	if ((ScoringMatrix[i - 1][j] + this->gap_score) >= (ScoringMatrix[i][j - 1] + this->gap_score)) {
-		max = (ScoringMatrix[i - 1][j] + this->gap_score);
-	}
-	else {
-		max = (ScoringMatrix[i][j - 1] + this->gap_score);
-	}
-	if ((ScoringMatrix[i - 1][j - 1] + similarity) >= max) {
-		return (ScoringMatrix[i - 1][j - 1] + similarity);
-	}
-	else {
-		return max;
-	}
+	return max(ScoringMatrix[i - 1][j - 1] + similarity, max(ScoringMatrix[i - 1][j] + this->gap_score, ScoringMatrix[i][j - 1] + this->gap_score));
 }
 
-int Needleman_Wunch::get_first_pos() {
+int Needleman_Wunch_alternative::get_first_pos() {
 	return this->j_min;
 }
 
-int Needleman_Wunch::get_last_pos() {
+int Needleman_Wunch_alternative::get_last_pos() {
 	return this->j_max;
 }
 
-string Needleman_Wunch::get_cigar() {
+string Needleman_Wunch_alternative::get_cigar() {
 	return this->cigar_final;
 }
 
-int Needleman_Wunch::get_cigar_length() {
+int Needleman_Wunch_alternative::get_cigar_length() {
 	return this->cigar_length;
 }
 
-int Needleman_Wunch::get_matrix_max_score() {
+int Needleman_Wunch_alternative::get_matrix_max_score() {
 	return this->matrix_max;
 }
 
-int Needleman_Wunch::get_mismatch() {
+int Needleman_Wunch_alternative::get_mismatch() {
 	return this->mismatch;
 }
 
-
-Needleman_Wunch::~Needleman_Wunch()
+Needleman_Wunch_alternative::~Needleman_Wunch_alternative()
 {
-	int lena = strlen(aa) + 1;
-	int lenb = strlen(bb) + 1;
+	int lena = this->a.length() + 1;
+	int lenb = this->b.length() + 1;
 	for (int i = 0; i < lena; i++) {
 		for (int j = 0; j < lenb; j++) {
 		}
 		delete[] ScoringMatrix[i];
 	}
 	ScoringMatrix = NULL;
-	aa = NULL;
-	bb = NULL;
 	delete[] cigar;
 	cigar = NULL;
 }

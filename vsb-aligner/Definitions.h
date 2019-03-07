@@ -37,7 +37,7 @@ public:
 		PN = "vsb-aligner";
 		VN = "0.1";
 		T = 20;
-		this->algoritm = 2;	//1 - Smith_Waterman, 2 - Needleman_Wunch
+		this->algoritm = 1;	//1 - Smith_Waterman, 2 - Needleman_Wunch
 		//Smith Waterman score
 		if (this->algoritm = 1) {
 			gap_score = -2;
@@ -56,15 +56,15 @@ public:
 
 	~ProgOptions() {
 	};	
-	char* ID; // Program ID
-	char* PN; // Program name
-	char* VN; // program version
-	int T; //Throw away readds with score less then specified number
+	char* ID;			// Program ID
+	char* PN;			// Program name
+	char* VN;			// program version
+	int T;				//Throw away reads with score less then specified number
 	int gap_score;
 	int match_score;
 	int mismatch_score;
-	u_int range_prefix;//Reference genom prefix n number of characters what will be included in calculation.
-	u_int range_suffix;//Reference genom suffix n number of characters what will be included in calculation.
+	u_int range_prefix;	//Reference genom prefix n number of characters what will be included in calculation.
+	u_int range_suffix;	//Reference genom suffix n number of characters what will be included in calculation.
 	int algoritm = 0;	//1 - Smith_Waterman, 2 - Needleman_Wunch
 };
 

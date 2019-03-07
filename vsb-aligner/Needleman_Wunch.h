@@ -1,6 +1,5 @@
 #include <iostream>     // std::cout, std::endl
 #include <string>
-#include <stack>
 #include "CIGAR.h"
 
 using namespace std;

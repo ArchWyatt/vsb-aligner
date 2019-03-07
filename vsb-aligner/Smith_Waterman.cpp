@@ -51,7 +51,6 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 	up:       gap in sequence 1
 	left:     gap in sequence 2
 	*/
-	stack<char> SCigar;
 	int pos_i = this->i_max;
 	int pos_j = this->j_max;
 	int move = NextMove(pos_i, pos_j);
@@ -60,16 +59,16 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 			if ((this->aa[pos_i - 1]) != (this->bb[pos_j - 1])) {
 				this->mismatch++;
 			}
-			SCigar.push('M');
+			this->cigar_str = "M" + this->cigar_str;
 			pos_i = pos_i - 1;
 			pos_j = pos_j - 1;
 		}
 		else if (move == 2) { // UP move
-			SCigar.push('I');
+			this->cigar_str = "I" + this->cigar_str;
 			pos_i = pos_i - 1;
 		}
 		else if (move == 3) { // LEFT move
-			SCigar.push('D');
+			this->cigar_str = "D" + this->cigar_str;
 			pos_j = pos_j - 1;
 		}
 		else { // Error, program should not move 
@@ -79,14 +78,7 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 	}
 	this->i_min = pos_i;
 	this->j_min = pos_j;
-	SCigar.push('M');
-
-	//reverse CIGAR string
-	while (!SCigar.empty())
-	{
-		this->cigar_str += SCigar.top();
-		SCigar.pop();
-	}
+	this->cigar_str = "M" + this->cigar_str;
 
 	//CIGAR string computing
 	this->cigar = strdup(this->cigar_str.c_str());
