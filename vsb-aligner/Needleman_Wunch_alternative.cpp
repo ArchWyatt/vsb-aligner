@@ -69,9 +69,15 @@ Needleman_Wunch_alternative::Needleman_Wunch_alternative(char* aa, char* bb, int
 	*/
 	int m = this->i_max;
 	int n = this->j_max;
+	bool first = false;	//Help to indicate fist position and don't allow next iteration to rewrite it.
 	while (m > 0 && n > 0)
 	{
 		int score = 0;
+		if ((m == 1 || n == 1) && first == false) {
+			first = true;
+			this->i_min = m;
+			this->j_min = n;
+		}
 		if (this->a[m - 1] == this->b[n - 1]) {
 			score = this->match_score;
 		}

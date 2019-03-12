@@ -18,9 +18,7 @@ private:
 	int mismatch_score = 0;
 	int **ScoringMatrix;		//Score Matrix
 	int matrix_max = 0;			//The highest score in matrix.
-	int i_min = 1, j_min = 1;	/* The row and column coordinates of the lowest score in matrix. (j is the first position of aligned read on reference genom)
-								i_min and j_min will be everytime 1, because this algoritm will go throught whole matrix, from the end to the beginning.
-								*/
+	int i_min = 0, j_min = 0;	//The row and column coordinates of the lowest score in matrix. (j is the first position of aligned read on reference genom)
 	int i_max = 0, j_max = 0;	//The row and columbn coordinates of the highest score in matrix. (j is the last position of aligned read on reference genom)
 	int mismatch = 0;			//Mismatch with reference genom
 

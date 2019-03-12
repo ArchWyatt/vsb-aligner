@@ -37,7 +37,7 @@ public:
 		PN = "vsb-aligner";
 		VN = "0.1";
 		T = 20;
-		this->algoritm = 1;	//1 - Smith_Waterman, 2 - Needleman_Wunch
+		this->algoritm = 2;	//1 - Smith_Waterman, 2 - Needleman_Wunch
 		//Smith Waterman score
 		if (this->algoritm = 1) {
 			gap_score = -2;
