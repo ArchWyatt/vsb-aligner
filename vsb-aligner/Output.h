@@ -292,11 +292,11 @@ public:
 				this->ofs << out->SEQ << "\t";
 				this->ofs << out->QUAL << "\t";
 				if (out->alternative == true) {
-					this->ofs << "A:Y" << "\t";
+					this->ofs << "ar:Y" << "\t";
 					dup++;
 				}
 				else {
-					this->ofs << "A:N" << "\t";
+					this->ofs << "ar:N" << "\t";
 				}
 				this->ofs << "\n";
 			}
