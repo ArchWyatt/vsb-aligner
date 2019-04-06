@@ -19,14 +19,14 @@ Needleman_Wunsch::Needleman_Wunsch(char* a, char* b, int gap_score, int match_sc
 		this->ScoringMatrix[i] = new int[lenb];
 	}
 	
-	// Fill first row and first column with default score
+	// Fill first row and first column with zero
 	this->ScoringMatrix[0][0] = 0;
 	for (int i = 1; i < lena; i++) {
-		ScoringMatrix[i][0] = i * this->gap_score;
+		this->ScoringMatrix[i][0] = 0;
 	}
 
 	for (int j = 1; j < lenb; j++) {
-		ScoringMatrix[0][j] = j * this->gap_score;
+		this->ScoringMatrix[0][j] = 0;
 	}
 
 	/* 

@@ -132,9 +132,7 @@ int main(int argc, char* argv[])
 	
 	/*
 	Sekce: Martin Kubala
-	*/
-	//Start time measuring
-	auto start = chrono::high_resolution_clock::now();
+	*/	
 	cout << "Martin Kubala - Part" << endl;
 
 	//SAM file header
@@ -145,12 +143,13 @@ int main(int argc, char* argv[])
 
 	//Start of the computing part
 	cout << "Computing part" << endl;
-	
+	//Start time measuring for Needleman-Wunsch or Smith-Waterman algorithm
+	auto start = chrono::high_resolution_clock::now();
+
 	//Read list iteration
 	ListIterator<Read> iterator(reads->First());
 	while (iterator.Current() != NULL){
 		Read* r = iterator.Current()->Value();
-
 		//Read alignment list iteration
 		ListIterator<Alignment> a_iterator(r->alignments->First());
 		while (a_iterator.Current() != NULL) {
@@ -218,17 +217,24 @@ int main(int argc, char* argv[])
 		}
 		iterator.Next();
 	}
+	//End time measuring for Needleman-Wunsch or Smith-Waterman algorithm
+	auto elapsed = chrono::high_resolution_clock::now() - start;
+
+	//SAM output part
 	cout << "SAM output part" << endl;
 	output->output_prepare(reads);
 	output->output_top_score_filtering(prog_info.options->T);
 	cout << "Printing into file" << endl;
 	output->print_output_data();
-
-	auto elapsed = chrono::high_resolution_clock::now() - start;
+	
+	//Program ending
 	long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
 	long long milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
 	long long seconds = std::chrono::duration_cast<std::chrono::seconds>(elapsed).count();
 	long long minutes = std::chrono::duration_cast<std::chrono::minutes>(elapsed).count();
+	cout << "Needleman-Wunsch algorithm" << endl;
+	//cout << "Needleman-Wunsch algorithm / string alternative" << endl;
+	//cout << "Smith-Waterman algorithm" << endl;
 	cout << "Runtime in microseconds: " << microseconds << endl;
 	cout << "Runtime in miliseconds: " << milliseconds << endl;
 	cout << "Runtime in seconds: " << seconds << endl;

@@ -7,10 +7,10 @@ class Alignment_output
 {
 public:
 	Alignment_output() {};
-	Alignment_output(u_int idx, char* namex, u_int FLAGx, char* RNAMEx, u_int POSx, u_int MAPQx, string CIGARx, char* RNEXTx, u_int PNEXTx, u_int TLENx, char* SEQx, char* QUALx, u_int scorex,bool available, bool alternative, bool top) {
+	Alignment_output(u_int idx, string namex, u_int FLAGx, char* RNAMEx, u_int POSx, u_int MAPQx, string CIGARx, char* RNEXTx, u_int PNEXTx, u_int TLENx, char* SEQx, char* QUALx, u_int scorex,bool available, bool alternative, bool top) {
 
 		this->id = idx;
-		this->QNAME = namex;
+		this->NAME = namex;
 		this->FLAG = FLAGx;
 		this->RNAME = RNAMEx;
 		this->POS = POSx;
@@ -31,7 +31,7 @@ public:
 
 	/* Attributes */
 	u_int id;
-	char* QNAME;
+	string NAME;
 	u_int FLAG;
 	char* RNAME;
 	u_int POS;
