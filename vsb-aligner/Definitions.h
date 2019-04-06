@@ -37,17 +37,17 @@ public:
 		PN = "vsb-aligner";
 		VN = "0.1";
 		T = 20;
-		this->algoritm = 2;	//1 - Smith_Waterman, 2 - Needleman_Wunch
+		this->algoritm = 2;	//1 - Smith_Waterman, 2 - Needleman_Wunsch
 		//Smith Waterman score
 		if (this->algoritm = 1) {
 			gap_score = -2;
 			match_score = 3;
 			mismatch_score = -3;
 		}
-		//Needleman Wunch score
+		//Needleman Wunsch score
 		else if (this->algoritm = 2) {
 			gap_score = -2;
-			match_score = 1;
+			match_score = 2;
 			mismatch_score = -1;
 		}
 		range_prefix = 0;
@@ -65,7 +65,7 @@ public:
 	int mismatch_score;
 	u_int range_prefix;	//Reference genom prefix n number of characters what will be included in calculation.
 	u_int range_suffix;	//Reference genom suffix n number of characters what will be included in calculation.
-	int algoritm = 0;	//1 - Smith_Waterman, 2 - Needleman_Wunch
+	int algoritm = 0;	//1 - Smith_Waterman, 2 - Needleman_Wunsch
 };
 
 class ProgInfo

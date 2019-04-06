@@ -10,7 +10,7 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 	this->aa = a;
 	this->bb = b;
 
-	int lena = strlen(a) + 1; // Pomocná promenná pro ScoringMatrix lena - read
+	int lena = strlen(a) + 1; // Pomocná promenná pro ScoringMatrix lena - alignment
 	int lenb = strlen(b) + 1; // Pomocná promenná pro ScoringMatrix lenb - reference genome
 
 	// Scoring Matrix Inicialization

@@ -4,7 +4,7 @@
 
 using namespace std;
 
-class Needleman_Wunch
+class Needleman_Wunsch
 {
 private:
 	char *aa;					//Read
@@ -23,9 +23,9 @@ private:
 	int mismatch = 0;			//Mismatch with reference genom
 
 public:
-	Needleman_Wunch(char* a, char* b, int gap_score, int match_score, int mismatch_score);
+	Needleman_Wunsch(char* a, char* b, int gap_score, int match_score, int mismatch_score);
 	int CalculateScore(int i, int j);
-	~Needleman_Wunch();
+	~Needleman_Wunsch();
 	int get_first_pos();
 	int get_last_pos();
 	string get_cigar();

@@ -1,7 +1,7 @@
 #pragma warning(disable:4996) //memcpy
-#include "Needleman_Wunch_alternative.h"
+#include "Needleman_Wunsch_alternative.h"
 
-Needleman_Wunch_alternative::Needleman_Wunch_alternative(char* aa, char* bb, int gap_score, int match_score, int mismatch_score)
+Needleman_Wunsch_alternative::Needleman_Wunsch_alternative(char* aa, char* bb, int gap_score, int match_score, int mismatch_score)
 {
 	this->gap_score = gap_score;
 	this->match_score = match_score;
@@ -10,7 +10,7 @@ Needleman_Wunch_alternative::Needleman_Wunch_alternative(char* aa, char* bb, int
 	this->a = aa;
 	this->b = bb;
 
-	int lena = this->a.length() + 1; // Pomocná promenná pro ScoringMatrix lena - read
+	int lena = this->a.length() + 1; // Pomocná promenná pro ScoringMatrix lena - alignment
 	int lenb = this->b.length() + 1; // Pomocná promenná pro ScoringMatrix lenb - reference genome
 
 	// Scoring Matrix Inicialization
@@ -112,7 +112,7 @@ Needleman_Wunch_alternative::Needleman_Wunch_alternative(char* aa, char* bb, int
 	delete cigar_cls;
 }
 
-int Needleman_Wunch_alternative::CalculateScore(int i, int j)
+int Needleman_Wunsch_alternative::CalculateScore(int i, int j)
 {
 
 	int similarity;
@@ -125,31 +125,31 @@ int Needleman_Wunch_alternative::CalculateScore(int i, int j)
 	return max(ScoringMatrix[i - 1][j - 1] + similarity, max(ScoringMatrix[i - 1][j] + this->gap_score, ScoringMatrix[i][j - 1] + this->gap_score));
 }
 
-int Needleman_Wunch_alternative::get_first_pos() {
+int Needleman_Wunsch_alternative::get_first_pos() {
 	return this->j_min;
 }
 
-int Needleman_Wunch_alternative::get_last_pos() {
+int Needleman_Wunsch_alternative::get_last_pos() {
 	return this->j_max;
 }
 
-string Needleman_Wunch_alternative::get_cigar() {
+string Needleman_Wunsch_alternative::get_cigar() {
 	return this->cigar_final;
 }
 
-int Needleman_Wunch_alternative::get_cigar_length() {
+int Needleman_Wunsch_alternative::get_cigar_length() {
 	return this->cigar_length;
 }
 
-int Needleman_Wunch_alternative::get_matrix_max_score() {
+int Needleman_Wunsch_alternative::get_matrix_max_score() {
 	return this->matrix_max;
 }
 
-int Needleman_Wunch_alternative::get_mismatch() {
+int Needleman_Wunsch_alternative::get_mismatch() {
 	return this->mismatch;
 }
 
-Needleman_Wunch_alternative::~Needleman_Wunch_alternative()
+Needleman_Wunsch_alternative::~Needleman_Wunsch_alternative()
 {
 	int lena = this->a.length() + 1;
 	int lenb = this->b.length() + 1;

@@ -1,7 +1,7 @@
 #pragma warning(disable:4996) //memcpy
-#include "Needleman_Wunch.h"
+#include "Needleman_Wunsch.h"
 
-Needleman_Wunch::Needleman_Wunch(char* a, char* b, int gap_score, int match_score, int mismatch_score)
+Needleman_Wunsch::Needleman_Wunsch(char* a, char* b, int gap_score, int match_score, int mismatch_score)
 {
 	this->gap_score = gap_score;
 	this->match_score = match_score;
@@ -10,7 +10,7 @@ Needleman_Wunch::Needleman_Wunch(char* a, char* b, int gap_score, int match_scor
 	this->aa = a;
 	this->bb = b;
 
-	int lena = strlen(a) + 1; // Pomocná promenná pro ScoringMatrix lena - read
+	int lena = strlen(a) + 1; // Pomocná promenná pro ScoringMatrix lena - alignment
 	int lenb = strlen(b) + 1; // Pomocná promenná pro ScoringMatrix lenb - reference genome
 
 	// Scoring Matrix Inicialization
@@ -97,7 +97,7 @@ Needleman_Wunch::Needleman_Wunch(char* a, char* b, int gap_score, int match_scor
 	delete cigar_cls;
 }
 
-int Needleman_Wunch::CalculateScore(int i, int j)
+int Needleman_Wunsch::CalculateScore(int i, int j)
 {
 	int max = 0;
 	int similarity;
@@ -123,32 +123,31 @@ int Needleman_Wunch::CalculateScore(int i, int j)
 	}
 }
 
-int Needleman_Wunch::get_first_pos() {
+int Needleman_Wunsch::get_first_pos() {
 	return this->j_min;
 }
 
-int Needleman_Wunch::get_last_pos() {
+int Needleman_Wunsch::get_last_pos() {
 	return this->j_max;
 }
 
-string Needleman_Wunch::get_cigar() {
+string Needleman_Wunsch::get_cigar() {
 	return this->cigar_final;
 }
 
-int Needleman_Wunch::get_cigar_length() {
+int Needleman_Wunsch::get_cigar_length() {
 	return this->cigar_length;
 }
 
-int Needleman_Wunch::get_matrix_max_score() {
+int Needleman_Wunsch::get_matrix_max_score() {
 	return this->matrix_max;
 }
 
-int Needleman_Wunch::get_mismatch() {
+int Needleman_Wunsch::get_mismatch() {
 	return this->mismatch;
 }
 
-
-Needleman_Wunch::~Needleman_Wunch()
+Needleman_Wunsch::~Needleman_Wunsch()
 {
 	int lena = strlen(aa) + 1;
 	int lenb = strlen(bb) + 1;
