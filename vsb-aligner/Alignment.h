@@ -21,7 +21,7 @@ public:
 	/* Sekce: Martin Kubala */
 	string cigar;
 	u_int cigar_length;
-	u_int score;
+	int score;
 	/* Attribute for output, if it is true, alignment will be printed out */
 	bool available = true;
 	/* Mapping quality	*/

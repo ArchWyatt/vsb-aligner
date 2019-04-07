@@ -66,6 +66,7 @@ Needleman_Wunsch_alternative::Needleman_Wunsch_alternative(char* aa, char* bb, i
 		else {
 			score = this->mismatch_score;
 		}
+		//Move diag
 		if (m > 0 && n > 0 && ScoringMatrix[m][n] == ScoringMatrix[m - 1][n - 1] + score)
 		{
 			if ((this->a.at(m - 1)) != (this->b.at(n - 1))) {
@@ -74,11 +75,13 @@ Needleman_Wunsch_alternative::Needleman_Wunsch_alternative(char* aa, char* bb, i
 			this->cigar_str = "M" + this->cigar_str;
 			m--; n--;
 		}
+		//Move left
 		else if (n > 0 && ScoringMatrix[m][n] == ScoringMatrix[m][n - 1] + this->gap_score)
 		{
 			this->cigar_str = "D" + this->cigar_str;
 			n--;
 		}
+		//Move up
 		else //if (m > 0 && ScoringMatrix[m][n] == ScoringMatrix[m - 1][n] + this->gap_score)
 		{
 			this->cigar_str = "I" + this->cigar_str;
@@ -96,15 +99,20 @@ Needleman_Wunsch_alternative::Needleman_Wunsch_alternative(char* aa, char* bb, i
 
 int Needleman_Wunsch_alternative::CalculateScore(int i, int j)
 {
-
-	int similarity;
+	int diag_score = 0;
+	int left_score = 0;
+	int up_score = 0;
+	//Set diag/left/up score
 	if (this->a.at(i - 1) == this->b.at(j - 1)) {
-		similarity = this->match_score;
+		diag_score = this->ScoringMatrix[i - 1][j - 1] + this->match_score;
 	}
 	else {
-		similarity = this->mismatch_score;
+		diag_score = this->ScoringMatrix[i - 1][j - 1] + this->mismatch_score;
 	}
-	return max(ScoringMatrix[i - 1][j - 1] + similarity, max(ScoringMatrix[i - 1][j] + this->gap_score, ScoringMatrix[i][j - 1] + this->gap_score));
+	left_score = this->ScoringMatrix[i][j - 1] + this->gap_score;
+	up_score = this->ScoringMatrix[i - 1][j] + this->gap_score;
+	//Set maximum score from diag/left/up score
+	return max(diag_score, max(left_score, up_score));
 }
 
 int Needleman_Wunsch_alternative::get_first_pos() {

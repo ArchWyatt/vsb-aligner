@@ -42,7 +42,7 @@ public:
 	int TLEN;
 	char* SEQ;
 	char* QUAL;
-	u_int score;
+	int score;
 	bool available;
 	bool alternative;
 	bool top;

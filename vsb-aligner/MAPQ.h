@@ -27,6 +27,9 @@ public:
 		};
 		aq = (aq / counter);
 		temp = (4 + (3 - (this->k)) * (aq - 14));
+		if (temp < 0) {
+			return 0;
+		}
 		if (temp > 60) {
 			return 60;
 		}
