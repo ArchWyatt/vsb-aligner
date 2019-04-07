@@ -10,8 +10,8 @@ Needleman_Wunsch::Needleman_Wunsch(char* a, char* b, int gap_score, int match_sc
 	this->aa = a;
 	this->bb = b;
 
-	int lena = strlen(a) + 1; // Pomocná promenná pro ScoringMatrix lena - alignment
-	int lenb = strlen(b) + 1; // Pomocná promenná pro ScoringMatrix lenb - reference genome
+	int lena = strlen(a) + 1; // Help length variable ScoringMatrix lena - alignment
+	int lenb = strlen(b) + 1; // Help length variable ScoringMatrix lenb - reference genome
 
 	// Scoring Matrix Inicialization
 	this->ScoringMatrix = new int *[lena];
@@ -36,12 +36,9 @@ Needleman_Wunsch::Needleman_Wunsch(char* a, char* b, int gap_score, int match_sc
 		for (int j = 1; j < lenb; j++) {
 			int score = 0;
 			score = CalculateScore(i, j);
-			if (score > this->matrix_max)
-			{
-				this->matrix_max = score;
-				this->i_max = i;
-				this->j_max = j;
-			}
+			this->matrix_max = score;
+			this->i_max = i;
+			this->j_max = j;
 			this->ScoringMatrix[i][j] = score;
 		}
 	}
@@ -77,12 +74,12 @@ Needleman_Wunsch::Needleman_Wunsch(char* a, char* b, int gap_score, int match_sc
 			this->cigar_str = "M" + this->cigar_str;
 			m--; n--;
 		}
-		else if (n > 0 && ScoringMatrix[m][n] > ScoringMatrix[m][n - 1] - this->gap_score)
+		else if (n > 0 && ScoringMatrix[m][n] == ScoringMatrix[m][n - 1] + this->gap_score)
 		{
 			this->cigar_str = "D" + this->cigar_str;
 			n--;
 		}
-		else
+		else //if (m > 0 && ScoringMatrix[m][n] == ScoringMatrix[m - 1][n] + this->gap_score)
 		{
 			this->cigar_str = "I" + this->cigar_str;
 			m--;
@@ -107,8 +104,6 @@ int Needleman_Wunsch::CalculateScore(int i, int j)
 	else {
 		similarity = this->mismatch_score;
 	}
-
-
 	if ((ScoringMatrix[i - 1][j] + this->gap_score) >= (ScoringMatrix[i][j - 1] + this->gap_score)) {
 		max = (ScoringMatrix[i - 1][j] + this->gap_score);
 	}

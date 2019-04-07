@@ -36,27 +36,9 @@ Needleman_Wunsch_alternative::Needleman_Wunsch_alternative(char* aa, char* bb, i
 		for (int j = 1; j < lenb; j++) {
 			int score = 0;
 			score = CalculateScore(i, j);
-			if (score > this->matrix_max)
-			{
-				this->matrix_max = score;
-				this->i_max = i;
-				this->j_max = j;
-			}
-			this->ScoringMatrix[i][j] = score;
-		}
-	}
-
-	// Fill Matrix
-	for (int i = 1; i < lena; i++) {
-		for (int j = 1; j < lenb; j++) {
-			int score = 0;
-			score = CalculateScore(i, j);
-			if (score > this->matrix_max)
-			{
-				this->matrix_max = score;
-				this->i_max = i;
-				this->j_max = j;
-			}
+			this->matrix_max = score;
+			this->i_max = i;
+			this->j_max = j;
 			this->ScoringMatrix[i][j] = score;
 		}
 	}
@@ -78,7 +60,7 @@ Needleman_Wunsch_alternative::Needleman_Wunsch_alternative(char* aa, char* bb, i
 			this->i_min = m;
 			this->j_min = n;
 		}
-		if (this->a[m - 1] == this->b[n - 1]) {
+		if (this->a.at(m - 1) == this->b.at(n - 1)) {
 			score = this->match_score;
 		}
 		else {
@@ -86,18 +68,18 @@ Needleman_Wunsch_alternative::Needleman_Wunsch_alternative(char* aa, char* bb, i
 		}
 		if (m > 0 && n > 0 && ScoringMatrix[m][n] == ScoringMatrix[m - 1][n - 1] + score)
 		{
-			if ((this->a[m - 1]) != (this->b[n - 1])) {
+			if ((this->a.at(m - 1)) != (this->b.at(n - 1))) {
 				this->mismatch++;
 			}
 			this->cigar_str = "M" + this->cigar_str;
 			m--; n--;
 		}
-		else if (n > 0 && ScoringMatrix[m][n] > ScoringMatrix[m][n - 1] - this->gap_score)
+		else if (n > 0 && ScoringMatrix[m][n] == ScoringMatrix[m][n - 1] + this->gap_score)
 		{
 			this->cigar_str = "D" + this->cigar_str;
 			n--;
 		}
-		else
+		else //if (m > 0 && ScoringMatrix[m][n] == ScoringMatrix[m - 1][n] + this->gap_score)
 		{
 			this->cigar_str = "I" + this->cigar_str;
 			m--;
@@ -116,7 +98,7 @@ int Needleman_Wunsch_alternative::CalculateScore(int i, int j)
 {
 
 	int similarity;
-	if (this->a[i - 1] == this->b[j - 1]) {
+	if (this->a.at(i - 1) == this->b.at(j - 1)) {
 		similarity = this->match_score;
 	}
 	else {

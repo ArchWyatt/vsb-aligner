@@ -51,7 +51,7 @@ public:
 			mismatch_score = -1;
 		}
 		range_prefix = 0;
-		range_suffix = 10; 
+		range_suffix = 1; 
 	};
 
 	~ProgOptions() {
