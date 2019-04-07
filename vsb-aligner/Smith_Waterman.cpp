@@ -60,16 +60,16 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 				this->mismatch++;
 			}
 			this->cigar_str = "M" + this->cigar_str;
-			pos_i = pos_i - 1;
-			pos_j = pos_j - 1;
+			pos_i--;
+			pos_j--;
 		}
 		else if (move == 2) { // UP move
 			this->cigar_str = "I" + this->cigar_str;
-			pos_i = pos_i - 1;
+			pos_i--;
 		}
 		else if (move == 3) { // LEFT move
 			this->cigar_str = "D" + this->cigar_str;
-			pos_j = pos_j - 1;
+			pos_j--;
 		}
 		else { // Error, program should not move 
 			cout << "Chyba programu" << endl;
@@ -91,18 +91,19 @@ Smith_Waterman::Smith_Waterman(char* a, char* b, int gap_score, int match_score,
 int Smith_Waterman::CalculateScore(int i, int j)
 {
 	int max = 0;
-	int similarity;
+	int diag_score = 0;
+	int up_score = 0;
+	int left_score = 0;
+	//Set diag/left/up score
 	if (this->aa[i - 1] == this->bb[j - 1]) {
-		similarity = this->match_score;
+		diag_score = this->ScoringMatrix[i - 1][j - 1] + this->match_score;
 	}
 	else {
-		similarity = this->mismatch_score;
+		diag_score = this->ScoringMatrix[i - 1][j - 1] + this->mismatch_score;
 	}
-
-	int diag_score = this->ScoringMatrix[i - 1][j - 1] + similarity;
-	int up_score = this->ScoringMatrix[i - 1][j] + this->gap_score;
-	int left_score = this->ScoringMatrix[i][j - 1] + this->gap_score;
-
+	up_score = this->ScoringMatrix[i - 1][j] + this->gap_score;
+	left_score = this->ScoringMatrix[i][j - 1] + this->gap_score;
+	//Set maximum score from diag/left/up score
 	if (diag_score > max) {
 		max = diag_score;
 	}

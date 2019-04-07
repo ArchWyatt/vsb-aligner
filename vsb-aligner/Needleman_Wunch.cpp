@@ -66,6 +66,7 @@ Needleman_Wunsch::Needleman_Wunsch(char* a, char* b, int gap_score, int match_sc
 		else {
 			score = this->mismatch_score;
 		}
+		//Move diag
 		if (m > 0 && n > 0 && ScoringMatrix[m][n] == ScoringMatrix[m - 1][n - 1] + score)
 		{
 			if ((this->aa[m - 1]) != (this->bb[n - 1])) {
@@ -74,11 +75,13 @@ Needleman_Wunsch::Needleman_Wunsch(char* a, char* b, int gap_score, int match_sc
 			this->cigar_str = "M" + this->cigar_str;
 			m--; n--;
 		}
+		//Move left
 		else if (n > 0 && ScoringMatrix[m][n] == ScoringMatrix[m][n - 1] + this->gap_score)
 		{
 			this->cigar_str = "D" + this->cigar_str;
 			n--;
 		}
+		//Move up
 		else //if (m > 0 && ScoringMatrix[m][n] == ScoringMatrix[m - 1][n] + this->gap_score)
 		{
 			this->cigar_str = "I" + this->cigar_str;
