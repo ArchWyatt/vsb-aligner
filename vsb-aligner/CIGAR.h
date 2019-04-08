@@ -19,9 +19,9 @@ public:
 	}
 	string get_CIGAR() {
 		string temp_str = "";
-		int M = 0;
-		int I = 0;
-		int D = 0;
+		int M = 0;	//Match / mismatch
+		int I = 0;	//Insert
+		int D = 0;	//Delete
 		bool first_M = false;	//Start CIGAR string with M match/mismatch
 		for (int i = 0; i < strlen(this->cigar); i++) {
 			if (this->cigar[i] == 'M') {
@@ -29,43 +29,46 @@ public:
 					first_M = true;
 				}
 				M += 1;
-				this->cigar_length += 1;
 				if (I > 0) {
 					temp_str += to_string(I);
 					temp_str += 'I';
+					this->cigar_length += I;
 					I = 0;
 				}
 				else if (D > 0) {
 					temp_str += to_string(D);
 					temp_str += 'D';
+					this->cigar_length += D;
 					D = 0;
 				}
 			}
 			else if ((this->cigar[i] == 'I') && (first_M == true)) {
 				I += 1;
-				this->cigar_length += 1;
 				if (M > 0) {
 					temp_str += to_string(M);
 					temp_str += 'M';
+					this->cigar_length += M;
 					M = 0;
 				}
 				else if (D > 0) {
 					temp_str += to_string(D);
 					temp_str += 'D';
+					this->cigar_length += D;
 					D = 0;
 				}
 			}
 			else if ((this->cigar[i] == 'D') && (first_M == true)) {
 				D += 1;
-				this->cigar_length += 1;
 				if (M > 0) {
 					temp_str += to_string(M);
 					temp_str += 'M';
+					this->cigar_length += M;
 					M = 0;
 				}
 				else if (I > 0) {
 					temp_str += to_string(I);
 					temp_str += 'I';
+					this->cigar_length += I;
 					I = 0;
 				}
 			}
@@ -74,6 +77,7 @@ public:
 		if (M > 0) {
 			temp_str += to_string(M);
 			temp_str += 'M';
+			this->cigar_length += M;
 			M = 0;
 		}
 		/* We need only M match/mismatch at the end of the CIGAR string
