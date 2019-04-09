@@ -101,7 +101,7 @@ public:
 						a_iterator2.Next();
 					}
 					/*
-					Alternative Read alignment with max score
+					Alternative Read alignment with same score
 					*/
 					if (alternative_reads > 1) {
 						a->alternative = true;
@@ -194,7 +194,7 @@ public:
 						b_iterator2.Next();
 					}
 					/*
-					Alternative Read alignment with max score
+					Alternative Read alignment with same score
 					*/
 					if (alternative_reads > 1) {
 						b->alternative = true;
