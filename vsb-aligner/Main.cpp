@@ -232,9 +232,6 @@ int main(int argc, char* argv[])
 	long long milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
 	long long seconds = std::chrono::duration_cast<std::chrono::seconds>(elapsed).count();
 	long long minutes = std::chrono::duration_cast<std::chrono::minutes>(elapsed).count();
-	cout << "Needleman-Wunsch algorithm" << endl;
-	//cout << "Needleman-Wunsch algorithm / string alternative" << endl;
-	//cout << "Smith-Waterman algorithm" << endl;
 	cout << "Runtime in microseconds: " << microseconds << endl;
 	cout << "Runtime in miliseconds: " << milliseconds << endl;
 	cout << "Runtime in seconds: " << seconds << endl;
