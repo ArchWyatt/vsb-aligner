@@ -1,12 +1,10 @@
 *~
-*.sln
 *.db
 *.opendb
 .vs/*
 *.tlog
 *.idb
 *.pdb
-*.vcxproj
 *.filters
 *.user
 Debug/*
@@ -15,5 +13,4 @@ Release/*
 vsb-aligner/Debug/*
 vsb-aligner/Release/*
 vsb-aligner/data/*
-*.user
 vsb-aligner/x64/*
